@@ -1,0 +1,171 @@
+{
+  "@@locale": "en",
+  "appTitle": "Hue Match",
+  "homeTagline": "See it. Remember it. Mix it.",
+  "play": "Play",
+  "daily": "Daily",
+  "dailySubtitle": "Same 5 colors for everyone today",
+  "dailyDone": "Today {score} / {max}",
+  "@dailyDone": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyComeBack": "New colors tomorrow",
+  "dailyHeader": "Daily · {date}",
+  "@dailyHeader": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "modeMemory": "Memory",
+  "modePractice": "Practice",
+  "modeMemoryHint": "See it for {seconds} s, then mix from memory",
+  "@modeMemoryHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "modePracticeHint": "The target stays visible while you mix",
+  "bestScore": "Best",
+  "bestScoreValue": "Best {score}",
+  "@bestScoreValue": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "outOf": "/ {max}",
+  "@outOf": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "noBestYet": "No score yet",
+  "settings": "Settings",
+  "howToPlay": "How to play",
+  "roundOf": "Round {current}/{total}",
+  "@roundOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "scoreValue": "Score {score}",
+  "@scoreValue": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "revealPrompt": "Remember this color",
+  "yourColor": "Your color",
+  "target": "Target",
+  "you": "You",
+  "confirm": "Confirm",
+  "showAgain": "Show again",
+  "showAgainCost": "−10%",
+  "fineTune": "Fine tune",
+  "firstRunHint": "A = brightness. It fades your color toward black.",
+  "gotIt": "Got it",
+  "labelPerfect": "Perfect",
+  "labelSoClose": "So close",
+  "labelGood": "Good",
+  "labelNotBad": "Not bad",
+  "labelFarOff": "Far off",
+  "diffBrightness": "Brightness",
+  "diffTitle": "Your color vs target",
+  "replayPenaltyApplied": "Show again used · ×0.9",
+  "nextRound": "Next round",
+  "seeSummary": "See total",
+  "gameOverTitle": "Game over",
+  "dailyResultTitle": "Daily challenge",
+  "newBest": "New best",
+  "playAgain": "Play again",
+  "home": "Home",
+  "rounds": "Rounds",
+  "quitTitle": "Leave this game?",
+  "quitBody": "Your progress in this game will be lost.",
+  "quitConfirm": "Leave",
+  "cancel": "Cancel",
+  "close": "Close",
+  "back": "Back",
+  "sectionGame": "Game",
+  "sectionGeneral": "General",
+  "sectionAbout": "About",
+  "settingsLanguage": "Language",
+  "settingsSound": "Sound",
+  "settingsHaptics": "Vibration",
+  "settingsColorBlind": "Color-blind mode",
+  "settingsColorBlindHint": "Targets avoid the red–green axis",
+  "settingsRevealTime": "Memory time",
+  "settingsRevealTimeHint": "How long the target is shown",
+  "secondsShort": "{seconds} s",
+  "@secondsShort": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsShowValues": "Show values",
+  "settingsShowValuesHint": "Numbers next to the sliders",
+  "settingsRandomStart": "Random start",
+  "settingsRandomStartHint": "Sliders start at random values",
+  "settingsPrivacy": "Privacy policy",
+  "settingsVersion": "Version",
+  "howToStep1Title": "Remember the color",
+  "howToStep1Body": "You'll see a color. Look closely.",
+  "howToStep2Title": "Mix",
+  "howToStep2Body": "Set the color with R, G, B and the brightness with A.",
+  "howToStep3Title": "Confirm",
+  "howToStep3Body": "The closer you get, the more points you score.",
+  "howToStep4Title": "5 rounds",
+  "howToStep4Body": "Make the highest score in 5 rounds.",
+  "howToNext": "Next",
+  "howToSkip": "Skip",
+  "playNow": "Play now",
+  "channelRed": "Red",
+  "channelGreen": "Green",
+  "channelBlue": "Blue",
+  "channelAlpha": "Brightness",
+  "sliderSemantics": "{channel} {value}",
+  "@sliderSemantics": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "adPlaceholder": "Ad",
+  "percentValue": "{value}%",
+  "@percentValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "fineTuneHint": "Long-press a slider to fine tune",
+  "dailyLocked": "Played today"
+}
