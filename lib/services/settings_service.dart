@@ -12,8 +12,6 @@ class SettingsService extends ChangeNotifier {
 
   /// null → cihaz dili (desteklenmiyorsa İngilizce).
   String? languageOverride;
-  bool soundEnabled = true;
-  bool hapticEnabled = true;
   bool colorBlindMode = false;
   int revealSeconds = GameRules.defaultRevealSeconds;
   bool showValues = false;
@@ -29,8 +27,6 @@ class SettingsService extends ChangeNotifier {
     _prefs = prefs;
     final lang = prefs.getString(AppPrefsKeys.language);
     languageOverride = AppLanguages.nativeNames.containsKey(lang) ? lang : null;
-    soundEnabled = prefs.getBool(AppPrefsKeys.sound) ?? true;
-    hapticEnabled = prefs.getBool(AppPrefsKeys.haptic) ?? true;
     colorBlindMode = prefs.getBool(AppPrefsKeys.colorBlindMode) ?? false;
     final seconds = prefs.getInt(AppPrefsKeys.revealSeconds);
     revealSeconds = GameRules.revealSecondsOptions.contains(seconds)
@@ -54,12 +50,6 @@ class SettingsService extends ChangeNotifier {
     notifyListeners();
     await _prefs?.setString(AppPrefsKeys.language, code);
   }
-
-  Future<void> setSound(bool value) =>
-      _setBool(AppPrefsKeys.sound, value, () => soundEnabled = value);
-
-  Future<void> setHaptic(bool value) =>
-      _setBool(AppPrefsKeys.haptic, value, () => hapticEnabled = value);
 
   Future<void> setColorBlindMode(bool value) => _setBool(
     AppPrefsKeys.colorBlindMode,

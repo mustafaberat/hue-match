@@ -88,7 +88,7 @@ Süre çubuğu sade; geri sayım sayısı yok. Bitince hedef kare **kısa (200 m
 - Çubuk izleri kendi kanalının gradyanını gösterir (R çubuğu: o anki G,B ile R=0→255). Kullanıcı kaydırınca ne olacağını görür.
 - A çubuğu izi: mevcut renk → siyah gradyanı.
 - Başlangıç değerleri: `R=G=B=128, A=100%` (nötr gri). Ayarlar → “Rastgele başla” seçeneği.
-- Hassas ayar: çubuğa uzun basınca ince ayar modu (hareket ×0.25), haptic tık her 16 birimde.
+- Hassas ayar: çubuğa uzun basınca ince ayar modu (hareket ×0.25).
 - Pratik modunda hedef kare önizlemenin hemen üstünde, eşit boyutta, aralarında 8 dp boşluk.
 
 ### 4.3 Tur sonucu
@@ -195,7 +195,7 @@ Son adımda **Şimdi oyna** ve **Kapat**.
 | **Home** | Ad, hue karesi, Hafıza / Pratik, **Oyna**, altında Ayarlar, onun altında Nasıl oynanır, en iyi skor. Altta banner |
 | **Oyun** | §4.1–4.3 |
 | **Oyun sonu** | §4.4 |
-| **Ayarlar** | Dil (10), ses, titreşim, renk körü modu, hafıza süresi, değerleri göster, rastgele başla, How to play, gizlilik politikası, sürüm |
+| **Ayarlar** | Dil (10), renk körü modu, hafıza süresi, değerleri göster, rastgele başla, How to play, gizlilik politikası, sürüm |
 
 Ses ve titreşim yok. Ayarlarda da bu anahtarlar yok.
 

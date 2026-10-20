@@ -46,8 +46,6 @@ abstract final class AppLanguages {
 
 abstract final class AppPrefsKeys {
   static const String language = 'language';
-  static const String sound = 'sound';
-  static const String haptic = 'haptic';
   static const String colorBlindMode = 'color_blind_mode';
   static const String revealSeconds = 'reveal_seconds';
   static const String showValues = 'show_values';
@@ -95,12 +93,6 @@ abstract final class MixerRules {
   /// Uzun basınca hareket çarpanı.
   static const double fineTuneFactor = 0.25;
 
-  /// İnce ayarda haptic tık aralığı (kanal birimi).
-  static const int channelTickStep = 16;
-
-  /// A için %6 ≈ 16/255.
-  static const int alphaTickStep = 6;
-
   /// Rastgele başlangıçta A alt sınırı (%), çok karanlık başlamasın.
   static const int randomStartAlphaMin = 40;
 }
@@ -121,9 +113,6 @@ abstract final class ScoringConfig {
 
   /// Fark açıklamasında vurgulanan en büyük fark sayısı.
   static const int highlightedDiffs = 2;
-
-  /// Bu puan ve üzeri: çift kısa titreşim.
-  static const int celebrateMin = 98;
 }
 
 // ---------------------------------------------------------------------------

@@ -4,7 +4,6 @@ library;
 import 'package:flutter/widgets.dart';
 
 import 'services/ad_service.dart';
-import 'services/feedback_service.dart';
 import 'services/settings_service.dart';
 import 'services/stats_service.dart';
 
@@ -14,13 +13,11 @@ class AppServices {
     required this.stats,
     required this.ads,
     DateTime Function()? clock,
-  }) : feedback = FeedbackService(settings),
-       clock = clock ?? DateTime.now;
+  }) : clock = clock ?? DateTime.now;
 
   final SettingsService settings;
   final StatsService stats;
   final AdService ads;
-  final FeedbackService feedback;
 
   /// Günlük meydan okuma tarihi; ekran görüntülerinde sabitlenir.
   final DateTime Function() clock;

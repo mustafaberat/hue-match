@@ -151,9 +151,6 @@ abstract final class AppDurations {
 
   /// How-to demo döngüsü.
   static const Duration howToLoop = Duration(milliseconds: 3200);
-
-  /// 98+ puanda çift titreşim arası.
-  static const Duration doubleHapticGap = Duration(milliseconds: 90);
 }
 
 /// Home hue karesi — sabit L / C ile OKLCh'de döner.

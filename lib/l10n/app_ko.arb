@@ -56,8 +56,6 @@
   "sectionGeneral": "General",
   "sectionAbout": "About",
   "settingsLanguage": "Language",
-  "settingsSound": "Sound",
-  "settingsHaptics": "Vibration",
   "settingsColorBlind": "Color-blind mode",
   "settingsColorBlindHint": "Targets avoid the red–green axis",
   "settingsRevealTime": "Memory time",

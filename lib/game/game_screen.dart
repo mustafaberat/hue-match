@@ -129,7 +129,6 @@ class _GameScreenState extends State<GameScreen>
 
   void _onConfirm() {
     final services = _services;
-    services.feedback.confirm();
     final result = _engine.submit(_mix);
     if (!services.settings.onboardingDone) {
       services.settings.setOnboardingDone(true);
@@ -138,7 +137,6 @@ class _GameScreenState extends State<GameScreen>
       _lastResult = result;
       _phase = GamePhase.result;
     });
-    services.feedback.result(result.score);
   }
 
   Future<void> _onNext() async {
@@ -225,7 +223,6 @@ class _GameScreenState extends State<GameScreen>
           onReplay: _onReplay,
           showHint: !settings.onboardingDone,
           onHintDismissed: () => settings.setOnboardingDone(true),
-          onFineTick: _services.feedback.fineTick,
         ),
       ),
       GamePhase.result => RoundResultView(

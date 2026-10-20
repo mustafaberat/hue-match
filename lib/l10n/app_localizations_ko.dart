@@ -193,12 +193,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settingsLanguage => 'Language';
 
   @override
-  String get settingsSound => 'Sound';
-
-  @override
-  String get settingsHaptics => 'Vibration';
-
-  @override
   String get settingsColorBlind => 'Color-blind mode';
 
   @override

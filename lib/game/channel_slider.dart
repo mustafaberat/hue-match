@@ -1,8 +1,7 @@
 /// Gradyan izli kanal çubuğu (§4.2).
 ///
 /// İz, o anki diğer kanallarla bu kanalın 0→max gidişini siyah sahne üzerinde
-/// gösterir; A izi siyah → mevcut renk. Uzun basınca ince ayar (×0.25) ve
-/// her [MixerRules.channelTickStep] birimde haptic tık.
+/// gösterir; A izi siyah → mevcut renk. Uzun basınca ince ayar (×0.25).
 library;
 
 import 'package:flutter/material.dart';
@@ -27,10 +26,6 @@ extension MixChannelInfo on MixChannel {
 
   int get max =>
       this == MixChannel.a ? MixerRules.alphaMax : MixerRules.channelMax;
-
-  int get tickStep => this == MixChannel.a
-      ? MixerRules.alphaTickStep
-      : MixerRules.channelTickStep;
 
   Color get identity => switch (this) {
     MixChannel.r => AppColors.channelR,
@@ -81,7 +76,6 @@ class ChannelSlider extends StatefulWidget {
     required this.mix,
     required this.onChanged,
     this.showValue = false,
-    this.onFineTick,
     this.onFineChanged,
     this.enabled = true,
     super.key,
@@ -91,7 +85,6 @@ class ChannelSlider extends StatefulWidget {
   final MixColor mix;
   final ValueChanged<MixColor> onChanged;
   final bool showValue;
-  final VoidCallback? onFineTick;
   final ValueChanged<bool>? onFineChanged;
   final bool enabled;
 
@@ -111,9 +104,6 @@ class _ChannelSliderState extends State<ChannelSlider> {
   void _setValue(double raw) {
     final next = raw.round().clamp(0, _channel.max);
     if (next == _value) return;
-    if (_fine && next ~/ _channel.tickStep != _value ~/ _channel.tickStep) {
-      widget.onFineTick?.call();
-    }
     widget.onChanged(_channel.apply(widget.mix, next));
   }
 

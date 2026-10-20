@@ -26,7 +26,6 @@ class MixerView extends StatefulWidget {
     this.onReplay,
     this.showHint = false,
     this.onHintDismissed,
-    this.onFineTick,
     super.key,
   });
 
@@ -40,7 +39,6 @@ class MixerView extends StatefulWidget {
   final VoidCallback? onReplay;
   final bool showHint;
   final VoidCallback? onHintDismissed;
-  final VoidCallback? onFineTick;
 
   @override
   State<MixerView> createState() => _MixerViewState();
@@ -60,7 +58,6 @@ class _MixerViewState extends State<MixerView> {
       mix: widget.mix,
       onChanged: widget.onMixChanged,
       showValue: widget.showValues,
-      onFineTick: widget.onFineTick,
       onFineChanged: (v) => setState(() => _fine = v),
     );
 

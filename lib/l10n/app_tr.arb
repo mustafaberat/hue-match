@@ -56,8 +56,6 @@
   "sectionGeneral": "Genel",
   "sectionAbout": "Hakkında",
   "settingsLanguage": "Dil",
-  "settingsSound": "Ses",
-  "settingsHaptics": "Titreşim",
   "settingsColorBlind": "Renk körü modu",
   "settingsColorBlindHint": "Hedefler kırmızı–yeşil ekseninden kaçınır",
   "settingsRevealTime": "Hafıza süresi",

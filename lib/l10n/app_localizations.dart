@@ -450,18 +450,6 @@ abstract class AppLocalizations {
   /// **'Language'**
   String get settingsLanguage;
 
-  /// No description provided for @settingsSound.
-  ///
-  /// In en, this message translates to:
-  /// **'Sound'**
-  String get settingsSound;
-
-  /// No description provided for @settingsHaptics.
-  ///
-  /// In en, this message translates to:
-  /// **'Vibration'**
-  String get settingsHaptics;
-
   /// No description provided for @settingsColorBlind.
   ///
   /// In en, this message translates to:

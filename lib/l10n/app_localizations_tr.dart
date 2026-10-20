@@ -192,12 +192,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsLanguage => 'Dil';
 
   @override
-  String get settingsSound => 'Ses';
-
-  @override
-  String get settingsHaptics => 'Titreşim';
-
-  @override
   String get settingsColorBlind => 'Renk körü modu';
 
   @override
