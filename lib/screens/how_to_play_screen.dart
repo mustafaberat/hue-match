@@ -1,5 +1,5 @@
 /// How to play (§8): gerçek bileşenlerle animasyonlu 4 adım.
-/// Home "?" ve Ayarlar'dan açılır; ilk açılışta otomatik (Geç ile atlanır).
+/// Home ve Ayarlar'dan açılır.
 library;
 
 import 'package:flutter/material.dart';
@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import '../app_scope.dart';
 import '../color/composite.dart';
 import '../color/oklab.dart';
-import '../color/scoring.dart';
 import '../components/buttons.dart';
 import '../components/color_swatch.dart';
 import '../components/l10n_format.dart';
@@ -143,7 +142,7 @@ class _HowToPlayScreenState extends State<HowToPlayScreen>
       (l10n.howToStep4Title, l10n.howToStep4Body),
     ];
 
-    return Scaffold(
+    return ThemedScaffold(
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -172,8 +171,8 @@ class _HowToPlayScreenState extends State<HowToPlayScreen>
                           TextButton(
                             onPressed: _close,
                             style: TextButton.styleFrom(
-                              foregroundColor: AppColors.textSecondary,
-                              textStyle: AppText.bodyStrong,
+                              foregroundColor: AppColors.textOnBackdrop,
+                              textStyle: AppText.onSky(AppText.bodyStrong),
                             ),
                             child: Text(l10n.howToSkip),
                           ),
@@ -255,6 +254,7 @@ class _Step extends StatelessWidget {
                 color: AppColors.stage,
                 borderRadius: BorderRadius.circular(AppRadii.stage),
                 border: Border.all(color: AppColors.outline),
+                boxShadow: AppShadows.card,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xxl),
@@ -271,14 +271,34 @@ class _Step extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.xxxl),
-        Text(
-          '${index + 1} / ${HowToPlayScreen.stepCount}',
-          style: AppText.caption.copyWith(color: AppColors.accent),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${index + 1} / ${HowToPlayScreen.stepCount}',
+                    style: AppText.caption.copyWith(
+                      color: AppColors.accent,
+                      shadows: AppShadows.onBackdrop,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(title, style: AppText.onSky(AppText.title)),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(body, style: AppText.onSky(AppText.body)),
+                ],
+              ),
+            ),
+            if (index == 0 || index == 3) ...[
+              const SizedBox(width: AppSpacing.sm),
+              ThemeMascot(mood: MascotMood.happy, size: AppSizes.mascotHowTo),
+            ],
+          ],
         ),
-        const SizedBox(height: AppSpacing.sm),
-        Text(title, style: AppText.title),
-        const SizedBox(height: AppSpacing.md),
-        Text(body, style: AppText.body),
       ],
     );
   }
@@ -358,7 +378,7 @@ class _MixDemo extends StatelessWidget {
                   AppSpacing.md +
                   AppSizes.sliderRowHeight / 2 +
                   HowToDemo.handOffsetY,
-              child: const IgnorePointer(
+              child: IgnorePointer(
                 child: Icon(
                   Icons.touch_app_rounded,
                   size: AppSizes.handIcon,
@@ -405,10 +425,10 @@ class _ResultDemo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
-            Text('$shown', style: AppText.displayLarge),
+            Text(l10n.percent(shown), style: AppText.displayLarge),
             const SizedBox(width: AppSpacing.md),
             Text(
-              l10n.scoreLabel(labelFor(HowToDemo.resultScore)),
+              l10n.closeness,
               style: AppText.label.copyWith(color: AppColors.textSecondary),
             ),
           ],

@@ -20,11 +20,11 @@ class RevealBar extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              const ColoredBox(color: AppColors.outlineStrong),
+              ColoredBox(color: AppColors.outlineStrong),
               FractionallySizedBox(
                 alignment: Alignment.centerLeft,
                 widthFactor: remaining.clamp(0.0, 1.0),
-                child: const ColoredBox(color: AppColors.textPrimary),
+                child: ColoredBox(color: AppColors.textPrimary),
               ),
             ],
           ),

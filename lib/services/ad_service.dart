@@ -1,5 +1,6 @@
 /// AdMob: Home banner + oyun sonu interstitial (Click Battle `AdService` deseni).
 ///
+/// Play Families (5 yaş altı dahil): TFCD + TFUA + max rating G, NPA.
 /// Web'de ve `FLUTTER_TEST` altında MobileAds hiç başlatılmaz.
 /// Karıştırma ve sonuç ekranında reklam yok (§10).
 library;
@@ -71,13 +72,25 @@ class AdService extends ChangeNotifier {
   void initialize() {
     if (_initialized || !isSupported) return;
     _initialized = true;
+    unawaited(_start());
+  }
+
+  Future<void> _start() async {
     try {
-      MobileAds.instance.initialize();
+      await _applyFamiliesRequestConfiguration();
+      await MobileAds.instance.initialize();
+      await _applyFamiliesRequestConfiguration();
       _loadBanner();
       _loadInterstitial();
     } catch (_) {
       // Reklam altyapısı yoksa oyun reklamsız devam eder.
     }
+  }
+
+  Future<void> _applyFamiliesRequestConfiguration() {
+    return MobileAds.instance.updateRequestConfiguration(
+      AdConfig.familiesRequestConfiguration,
+    );
   }
 
   void _loadBanner() {
@@ -86,7 +99,7 @@ class AdService extends ChangeNotifier {
     _banner = BannerAd(
       adUnitId: AdConfig.homeBanner,
       size: AdSize.banner,
-      request: const AdRequest(),
+      request: AdConfig.adRequest,
       listener: BannerAdListener(
         onAdLoaded: (_) {
           _bannerLoaded = true;
@@ -107,7 +120,7 @@ class AdService extends ChangeNotifier {
     _interstitialLoading = true;
     InterstitialAd.load(
       adUnitId: AdConfig.gameEndInterstitial,
-      request: const AdRequest(),
+      request: AdConfig.adRequest,
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _interstitial = ad;

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import '../color/composite.dart';
 import '../components/buttons.dart';
 import '../components/color_swatch.dart';
-import '../components/hint_bubble.dart';
 import '../config/tokens.dart';
 import '../engine/match_engine.dart';
 import '../l10n/app_localizations.dart';
@@ -24,8 +23,6 @@ class MixerView extends StatefulWidget {
     this.showValues = false,
     this.canReplay = false,
     this.onReplay,
-    this.showHint = false,
-    this.onHintDismissed,
     super.key,
   });
 
@@ -37,15 +34,12 @@ class MixerView extends StatefulWidget {
   final bool showValues;
   final bool canReplay;
   final VoidCallback? onReplay;
-  final bool showHint;
-  final VoidCallback? onHintDismissed;
 
   @override
   State<MixerView> createState() => _MixerViewState();
 }
 
 class _MixerViewState extends State<MixerView> {
-  final LayerLink _alphaLink = LayerLink();
   bool _fine = false;
 
   @override
@@ -59,6 +53,7 @@ class _MixerViewState extends State<MixerView> {
       onChanged: widget.onMixChanged,
       showValue: widget.showValues,
       onFineChanged: (v) => setState(() => _fine = v),
+      onBackdrop: true,
     );
 
     return Stack(
@@ -126,10 +121,7 @@ class _MixerViewState extends State<MixerView> {
                   slider(MixChannel.r),
                   slider(MixChannel.g),
                   slider(MixChannel.b),
-                  CompositedTransformTarget(
-                    link: _alphaLink,
-                    child: slider(MixChannel.a),
-                  ),
+                  slider(MixChannel.a),
                   const SizedBox(height: AppSpacing.xl),
                   Row(
                     children: [
@@ -141,7 +133,9 @@ class _MixerViewState extends State<MixerView> {
                             subtitle: widget.canReplay
                                 ? l10n.showAgainCost
                                 : null,
-                            onPressed: widget.canReplay ? widget.onReplay : null,
+                            onPressed: widget.canReplay
+                                ? widget.onReplay
+                                : null,
                           ),
                         ),
                         const SizedBox(width: AppSpacing.md),
@@ -160,22 +154,6 @@ class _MixerViewState extends State<MixerView> {
             ),
           ],
         ),
-        if (widget.showHint)
-          Positioned(
-            left: 0,
-            top: 0,
-            child: CompositedTransformFollower(
-              link: _alphaLink,
-              showWhenUnlinked: false,
-              targetAnchor: Alignment.topCenter,
-              followerAnchor: Alignment.bottomCenter,
-              child: HintBubble(
-                text: l10n.firstRunHint,
-                actionLabel: l10n.gotIt,
-                onAction: widget.onHintDismissed ?? () {},
-              ),
-            ),
-          ),
       ],
     );
   }

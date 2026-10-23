@@ -10,7 +10,7 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appTitle => 'Hue Match';
+  String get appTitle => 'HueMind';
 
   @override
   String get homeTagline => 'See it. Remember it. Mix it.';
@@ -52,7 +52,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get modePracticeHint => 'The target stays visible while you mix';
 
   @override
-  String get bestScore => 'Best';
+  String get bestScore => '最高分';
 
   @override
   String bestScoreValue(int score) {
@@ -87,6 +87,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get revealPrompt => 'Remember this color';
 
   @override
+  String get skip => '跳过';
+
+  @override
   String get yourColor => 'Your color';
 
   @override
@@ -94,6 +97,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get you => 'You';
+
+  @override
+  String get closeness => '接近度';
 
   @override
   String get confirm => 'Confirm';
@@ -196,7 +202,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsColorBlind => 'Color-blind mode';
 
   @override
-  String get settingsColorBlindHint => 'Targets avoid the red–green axis';
+  String get settingsColorBlindHint => 'Colors are easier to tell apart';
 
   @override
   String get settingsRevealTime => 'Memory time';

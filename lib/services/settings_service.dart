@@ -18,7 +18,6 @@ class SettingsService extends ChangeNotifier {
   bool randomStart = false;
   GameMode mode = GameMode.memory;
   bool onboardingDone = false;
-  bool howToSeen = false;
 
   String get languageCode => languageOverride ?? deviceLanguage();
 
@@ -40,7 +39,6 @@ class SettingsService extends ChangeNotifier {
       orElse: () => GameMode.memory,
     );
     onboardingDone = prefs.getBool(AppPrefsKeys.onboardingDone) ?? false;
-    howToSeen = prefs.getBool(AppPrefsKeys.howToSeen) ?? false;
     notifyListeners();
   }
 
@@ -68,9 +66,6 @@ class SettingsService extends ChangeNotifier {
     value,
     () => onboardingDone = value,
   );
-
-  Future<void> setHowToSeen(bool value) =>
-      _setBool(AppPrefsKeys.howToSeen, value, () => howToSeen = value);
 
   Future<void> setRevealSeconds(int value) async {
     if (!GameRules.revealSecondsOptions.contains(value)) return;

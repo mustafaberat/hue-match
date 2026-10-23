@@ -41,12 +41,6 @@ class _HomeScreenState extends State<HomeScreen>
   );
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowHowTo());
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
@@ -61,13 +55,6 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     _hue.dispose();
     super.dispose();
-  }
-
-  Future<void> _maybeShowHowTo() async {
-    final settings = AppScope.of(context).settings;
-    if (settings.howToSeen || !mounted) return;
-    await settings.setHowToSeen(true);
-    if (mounted) _openHowTo();
   }
 
   void _openHowTo() {
@@ -102,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen>
     final services = AppScope.of(context);
     final settings = services.settings;
 
-    return Scaffold(
+    return ThemedScaffold(
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -117,34 +104,48 @@ class _HomeScreenState extends State<HomeScreen>
                 AppSpacing.md,
               ),
               child: ListenableBuilder(
-                listenable: Listenable.merge([settings, services.stats]),
+                listenable: Listenable.merge([settings, services.stats, _hue]),
                 builder: (context, _) {
                   final best = services.stats.bestFor(settings.mode);
+                  final hue =
+                      widget.hueOverride ??
+                      _hue.value * HomeSwatchStyle.fullTurn;
+                  final swatch = homeSwatchColor(hue);
                   return Column(
                     children: [
-                      const SizedBox(height: AppSpacing.sm),
                       Expanded(
                         child: ShrinkToFit(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              _HueSquare(
-                                animation: _hue,
-                                hueOverride: widget.hueOverride,
-                              ),
+                              _HueSquare(color: swatch),
                               const SizedBox(
                                 height: AppSpacing.xxxl + AppSpacing.sm,
                               ),
-                              Text(
-                                l10n.appTitle,
-                                textAlign: TextAlign.center,
-                                style: AppText.title,
-                              ),
+                              PlayfulTitle(l10n.appTitle),
                               const SizedBox(height: AppSpacing.sm),
                               Text(
                                 l10n.homeTagline,
                                 textAlign: TextAlign.center,
-                                style: AppText.body,
+                                style: AppText.onSky(AppText.body),
+                              ),
+                              const SizedBox(height: AppSpacing.lg),
+                              Visibility(
+                                visible: best > 0,
+                                maintainSize: true,
+                                maintainAnimation: true,
+                                maintainState: true,
+                                child: Column(
+                                  children: [
+                                    SkyCaption(l10n.bestScore),
+                                    const SizedBox(height: AppSpacing.xs),
+                                    Text(
+                                      '$best ${l10n.outOf(GameRules.maxGameScore)}',
+                                      textAlign: TextAlign.center,
+                                      style: AppText.onSky(AppText.number),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -159,19 +160,17 @@ class _HomeScreenState extends State<HomeScreen>
                         onChanged: settings.setMode,
                       ),
                       const SizedBox(height: AppSpacing.sm),
-                      Text(
+                      SkyCaption(
                         settings.mode == GameMode.memory
                             ? l10n.modeMemoryHint(settings.revealSeconds)
                             : l10n.modePracticeHint,
-                        textAlign: TextAlign.center,
-                        style: AppText.small.copyWith(
-                          color: AppColors.textMuted,
-                        ),
+                        style: AppText.small,
                       ),
                       const SizedBox(height: AppSpacing.xl),
                       PrimaryButton(
                         label: l10n.play,
                         icon: Icons.play_arrow_rounded,
+                        color: swatch,
                         onPressed: _play,
                       ),
                       const SizedBox(height: AppSpacing.md),
@@ -186,9 +185,7 @@ class _HomeScreenState extends State<HomeScreen>
                         icon: Icons.question_mark_rounded,
                         onPressed: _openHowTo,
                       ),
-                      const SizedBox(height: AppSpacing.xl),
-                      _BestRow(best: best),
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.lg),
                       widget.bannerOverride ?? const _HomeBanner(),
                     ],
                   );
@@ -202,11 +199,14 @@ class _HomeScreenState extends State<HomeScreen>
   }
 }
 
-class _HueSquare extends StatelessWidget {
-  const _HueSquare({required this.animation, this.hueOverride});
+Color homeSwatchColor(double hue) => oklchToRgbGamutMapped(
+  Oklch(HomeSwatchStyle.lightness, HomeSwatchStyle.chroma, hue),
+).toColor();
 
-  final Animation<double> animation;
-  final double? hueOverride;
+class _HueSquare extends StatelessWidget {
+  const _HueSquare({required this.color});
+
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -216,64 +216,38 @@ class _HueSquare extends StatelessWidget {
           AppSizes.homeSwatch,
           constraints.maxWidth * AppSizes.homeSwatchMaxFraction,
         ].reduce((a, b) => a < b ? a : b);
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (context, _) {
-            final hue =
-                hueOverride ?? animation.value * HomeSwatchStyle.fullTurn;
-            final color = oklchToRgbGamutMapped(
-              Oklch(HomeSwatchStyle.lightness, HomeSwatchStyle.chroma, hue),
-            ).toColor();
-            return SizedBox.square(
-              dimension: side,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: AppColors.stage,
-                  borderRadius: BorderRadius.circular(AppRadii.stage),
-                  border: Border.all(color: AppColors.outline),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.xl),
+        final mascotSize = AppSizes.mascotHome;
+        final mascotCanvas = ThemeMascot.canvasSize(mascotSize);
+        final overlap =
+            AppSizes.homeMascotOverlap + ThemeMascot.homeLeftInset(mascotSize);
+        final sitBelow = AppSizes.homeMascotSitBelow;
+        return SizedBox(
+          height: side + sitBelow,
+          width: side + mascotCanvas.width - overlap,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                left: 0,
+                top: 0,
+                child: SizedBox.square(
+                  dimension: side,
                   child: ColorSwatchBox(color: color),
                 ),
               ),
-            );
-          },
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: ThemeMascot(
+                  mood: MascotMood.happy,
+                  size: mascotSize,
+                  bodyColor: color,
+                ),
+              ),
+            ],
+          ),
         );
       },
-    );
-  }
-}
-
-class _BestRow extends StatelessWidget {
-  const _BestRow({required this.best});
-
-  final int best;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(
-          Icons.emoji_events_outlined,
-          size: AppSizes.iconSmall,
-          color: AppColors.textMuted,
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        if (best > 0) ...[
-          Text(l10n.bestScore, style: AppText.small),
-          const SizedBox(width: AppSpacing.sm),
-          Text('$best', style: AppText.number),
-          const SizedBox(width: AppSpacing.xs),
-          Text(
-            l10n.outOf(GameRules.maxGameScore),
-            style: AppText.small.copyWith(color: AppColors.textMuted),
-          ),
-        ] else
-          Text(l10n.noBestYet, style: AppText.small),
-      ],
     );
   }
 }

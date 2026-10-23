@@ -27,6 +27,7 @@ class Segmented<T> extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.chip),
         border: Border.all(color: AppColors.outline),
+        boxShadow: AppShadows.card,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -47,7 +48,7 @@ class Segmented<T> extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: entry.key == selected
-                          ? AppColors.textPrimary
+                          ? AppColors.accent
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(AppRadii.chip),
                     ),
@@ -58,7 +59,7 @@ class Segmented<T> extends StatelessWidget {
                       style: AppText.small.copyWith(
                         fontWeight: FontWeight.w800,
                         color: entry.key == selected
-                            ? AppColors.background
+                            ? AppColors.onAccent
                             : AppColors.textSecondary,
                       ),
                     ),

@@ -1,6 +1,8 @@
-# hue_match
+# HueMind
 
-A new Flutter project.
+See a color, mix it from memory with RGB and brightness.
+
+Look: **Boya Atölyesi / Paint Studio** — cream paper, primary colours, crayon mascot (Chewy + Baloo 2). Single theme; no `KIDS_THEME` switch.
 
 ## Getting Started
 

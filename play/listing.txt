@@ -1,0 +1,52 @@
+{
+  "en-US": {
+    "title": "HueMind: Mix the Color",
+    "shortDescription": "See a color, mix it from memory with RGB and brightness. How close can you get?",
+    "fullDescription": "HueMind is a color matching game. A color appears for a few seconds. Then you mix the same color with four sliders: red, green, blue, and brightness. Closer mixes score higher.\n\nHOW TO PLAY\n• Memory mode: look at the target, then mix it from memory\n• Practice mode: the target stays on screen while you mix\n• Five rounds per game. Score is out of 500\n• Optional Show again (costs 10% of the round)\n\nFEATURES\n• Color-blind mode and optional numbers on the sliders\n• Fine tune: long-press a slider for smaller steps\n• Daily challenge: the same five colors for everyone today\n• Ten languages in Settings\n• Plays offline. No account\n• A banner on the home screen, and an occasional full-screen ad between games\n\nTrain your eye. Mix from memory. See how close you can get.\nDownload HueMind and start mixing.\n\nMade by ARU SOFT."
+  },
+  "es-419": {
+    "title": "HueMind: Mezcla el color",
+    "shortDescription": "Ves un color y lo mezclas de memoria con RGB y brillo. ¿Qué tan cerca?",
+    "fullDescription": "HueMind es un juego de mezclar colores. Un color aparece unos segundos. Luego mezclas el mismo color con cuatro controles: rojo, verde, azul y brillo. Cuanto más cerca, más puntos.\n\nCÓMO JUGAR\n• Modo memoria: ves el objetivo y luego lo mezclas de memoria\n• Modo práctica: el objetivo se queda en pantalla mientras mezclas\n• Cinco rondas por partida. La puntuación es sobre 500\n• Mostrar de nuevo es opcional (resta el 10% de la ronda)\n\nFUNCIONES\n• Modo daltónico y números opcionales en los controles\n• Ajuste fino: mantén pulsado un control para pasos más pequeños\n• Reto diario: los mismos cinco colores para todos hoy\n• Diez idiomas en Ajustes\n• Se juega sin conexión. Sin cuenta\n• Un banner en la pantalla de inicio y, a veces, un anuncio a pantalla completa entre partidas\n\nEntrena el ojo. Mezcla de memoria. Mira qué tan cerca llegas.\nDescarga HueMind y empieza a mezclar.\n\nHecho por ARU SOFT."
+  },
+  "pt-BR": {
+    "title": "HueMind: Misture a cor",
+    "shortDescription": "Veja uma cor e misture de memória com RGB e brilho. Quão perto você chega?",
+    "fullDescription": "HueMind é um jogo de combinar cores. Uma cor aparece por alguns segundos. Depois você mistura a mesma cor com quatro controles: vermelho, verde, azul e brilho. Quanto mais perto, mais pontos.\n\nCOMO JOGAR\n• Modo memória: veja o alvo e misture de memória\n• Modo prática: o alvo fica na tela enquanto você mistura\n• Cinco rodadas por partida. A pontuação vai até 500\n• Mostrar de novo é opcional (custa 10% da rodada)\n\nRECURSOS\n• Modo daltônico e números opcionais nos controles\n• Ajuste fino: pressione um controle para passos menores\n• Desafio diário: as mesmas cinco cores para todos hoje\n• Dez idiomas em Configurações\n• Jogue offline. Sem conta\n• Um banner na tela inicial e, às vezes, um anúncio em tela cheia entre as partidas\n\nTreine o olho. Misture de memória. Veja o quão perto você chega.\nBaixe o HueMind e comece a misturar.\n\nFeito pela ARU SOFT."
+  },
+  "zh-CN": {
+    "title": "HueMind：凭记忆调色",
+    "shortDescription": "看一眼颜色，再用 RGB 和亮度凭记忆调出来。你能有多接近？",
+    "fullDescription": "HueMind 是一款颜色匹配游戏。颜色会短暂出现，然后你用四个滑条调出同样的颜色：红、绿、蓝和亮度。越接近，分数越高。\n\n玩法\n• 记忆模式：先看目标色，再凭记忆调色\n• 练习模式：调色时目标一直显示在屏幕上\n• 每局五轮，满分 500\n• 可再看一次（本轮分数 ×0.9）\n\n特色\n• 色盲模式，滑条旁可显示数值\n• 微调：长按滑条，步进更小\n• 每日挑战：今天所有人同一组五色\n• 设置中有 10 种语言\n• 离线可玩，无需账号\n• 主页有横幅广告，局与局之间偶尔有全屏广告\n\n训练眼力，凭记忆调色，看你能有多接近。\n下载 HueMind，开始调色。\n\nARU SOFT 出品。"
+  },
+  "ja-JP": {
+    "title": "HueMind：記憶で色を作る",
+    "shortDescription": "色を見て、RGBと明るさで記憶から混ぜる。どこまで近づける？",
+    "fullDescription": "HueMindは色合わせゲームです。色が数秒表示されたら、4つのスライダーで同じ色を作ります。赤・緑・青・明るさ。近いほど高得点です。\n\n遊び方\n• 記憶モード：目標色を見てから、記憶で混ぜる\n• 練習モード：混ぜている間も目標色が画面に残る\n• 1ゲーム5ラウンド。満点は500点\n• 「もう一度見る」は任意（そのラウンドが10%減点）\n\n特徴\n• 色覚サポートと、スライダー横の数値表示\n• 微調整：スライダーを長押しすると細かく動く\n• デイリー：今日は全員同じ5色\n• 設定で10言語\n• オフラインで遊べる。アカウント不要\n• ホームにバナー、ゲームとゲームの間に時々全画面広告\n\n目を鍛えて、記憶で色を作ろう。どこまで近づけるか試してみて。\nHueMindをダウンロードして、混ぜ始めよう。\n\nARU SOFT。"
+  },
+  "de-DE": {
+    "title": "HueMind: Farbe mischen",
+    "shortDescription": "Sieh eine Farbe, mische sie aus dem Gedächtnis mit RGB und Helligkeit.",
+    "fullDescription": "HueMind ist ein Farb-Matching-Spiel. Eine Farbe erscheint kurz. Dann mischst du dieselbe Farbe mit vier Schiebern: Rot, Grün, Blau und Helligkeit. Je näher, desto mehr Punkte.\n\nSO SPIELT MAN\n• Gedächtnis-Modus: Ziel ansehen, dann aus dem Gedächtnis mischen\n• Übungsmodus: Das Ziel bleibt sichtbar, während du mischst\n• Fünf Runden pro Spiel. Punkte bis 500\n• Nochmal zeigen ist optional (10 % Abzug in der Runde)\n\nFEATURES\n• Farbblind-Modus und optionale Zahlen an den Schiebern\n• Feineinstellung: Schieber lange drücken für kleinere Schritte\n• Tägliche Challenge: dieselben fünf Farben für alle heute\n• Zehn Sprachen in den Einstellungen\n• Offline spielbar. Kein Konto\n• Ein Banner auf dem Startbildschirm und gelegentlich ein Vollbild-Werbespot zwischen den Spielen\n\nTrainiere dein Auge. Mische aus dem Gedächtnis. Sieh, wie nah du kommst.\nLade HueMind und fang an zu mischen.\n\nVon ARU SOFT."
+  },
+  "fr-FR": {
+    "title": "HueMind: Mélange couleur",
+    "shortDescription": "Vois une couleur, mélange-la de mémoire avec RVB et luminosité. Si proche ?",
+    "fullDescription": "HueMind est un jeu d’association de couleurs. Une couleur s’affiche quelques secondes. Ensuite tu mélanges la même couleur avec quatre curseurs : rouge, vert, bleu et luminosité. Plus tu es proche, plus tu marques.\n\nCOMMENT JOUER\n• Mode mémoire : tu vois la cible, puis tu mélanges de mémoire\n• Mode pratique : la cible reste à l’écran pendant que tu mélanges\n• Cinq manches par partie. Score sur 500\n• Revoir est optionnel (moins 10 % sur la manche)\n\nFONCTIONS\n• Mode daltonien et chiffres optionnels à côté des curseurs\n• Réglage fin : appuie longuement sur un curseur pour de plus petits pas\n• Défi du jour : les mêmes cinq couleurs pour tout le monde aujourd’hui\n• Dix langues dans Réglages\n• Jouable hors ligne. Pas de compte\n• Une bannière sur l’accueil et parfois une pub plein écran entre les parties\n\nEntraîne l’œil. Mélange de mémoire. Vois comme tu peux être proche.\nTélécharge HueMind et commence à mélanger.\n\nCréé par ARU SOFT."
+  },
+  "ko-KR": {
+    "title": "HueMind: 기억으로 조색",
+    "shortDescription": "색을 보고 RGB와 밝기로 기억해서 맞추세요. 얼마나 가까워질까요?",
+    "fullDescription": "HueMind는 색 맞추기 게임입니다. 색이 몇 초 보이고, 빨간·초록·파랑·밝기 네 슬라이더로 같은 색을 만듭니다. 가까울수록 점수가 높습니다.\n\n플레이 방법\n• 기억 모드: 목표 색을 본 뒤 기억으로 섞기\n• 연습 모드: 섞는 동안 목표가 화면에 남아 있음\n• 한 게임에 5라운드. 만점 500점\n• 다시 보기는 선택 (해당 라운드 10% 감점)\n\n기능\n• 색각 모드, 슬라이더 옆 숫자 표시\n• 미세 조절: 슬라이더를 길게 누르면 더 작게 움직임\n• 일일 도전: 오늘은 모두 같은 다섯 가지 색\n• 설정에서 10개 언어\n• 오프라인 플레이. 계정 없음\n• 홈 화면 배너, 게임과 게임 사이 가끔 전체 화면 광고\n\n눈을 훈련하세요. 기억으로 색을 맞추고, 얼마나 가까운지 확인하세요.\nHueMind를 다운로드하고 섞기를 시작하세요.\n\nARU SOFT."
+  },
+  "it-IT": {
+    "title": "HueMind: Mescola il colore",
+    "shortDescription": "Vedi un colore e mescolalo a memoria con RGB e luminosità. Quanto sei vicino?",
+    "fullDescription": "HueMind è un gioco di abbinamento colori. Un colore compare per pochi secondi. Poi mescoli lo stesso colore con quattro cursori: rosso, verde, blu e luminosità. Più sei vicino, più punti fai.\n\nCOME SI GIOCA\n• Modalità memoria: vedi il bersaglio e poi mescoli a memoria\n• Modalità pratica: il bersaglio resta visibile mentre mescoli\n• Cinque turni a partita. Punteggio su 500\n• Mostra di nuovo è facoltativo (togli il 10% del turno)\n\nFUNZIONI\n• Modalità per daltonici e numeri opzionali sui cursori\n• Regolazione fine: tieni premuto un cursore per passi più piccoli\n• Sfida giornaliera: gli stessi cinque colori per tutti oggi\n• Dieci lingue in Impostazioni\n• Si gioca offline. Nessun account\n• Un banner in home e a volte un annuncio a schermo intero tra una partita e l’altra\n\nAllena l’occhio. Mescola a memoria. Scopri quanto sei vicino.\nScarica HueMind e inizia a mescolare.\n\nCreato da ARU SOFT."
+  },
+  "tr-TR": {
+    "title": "HueMind: Rengi karıştır",
+    "shortDescription": "Rengi gör, RGB ve parlaklıkla hafızadan karıştır. Ne kadar yaklaşabilirsin?",
+    "fullDescription": "HueMind bir renk eşleme oyunu. Bir renk birkaç saniye görünür. Sonra aynı rengi dört çubukla karıştırırsın: kırmızı, yeşil, mavi ve parlaklık. Ne kadar yakınsan puanın o kadar yüksek.\n\nNASIL OYNANIR\n• Hafıza modu: hedefi gör, sonra hafızadan karıştır\n• Pratik modu: karıştırırken hedef ekranda kalır\n• Oyunda 5 tur. Skor 500 üzerinden\n• Tekrar göster isteğe bağlı (tur puanının %10’u düşer)\n\nÖZELLİKLER\n• Renk körü modu ve çubuklarda isteğe bağlı sayılar\n• İnce ayar: çubuğa uzun basınca adımlar küçülür\n• Günlük meydan okuma: bugün herkese aynı beş renk\n• Ayarlarda on dil\n• Çevrimdışı oynanır. Hesap yok\n• Ana sayfada banner, bazı oyunlar arasında tam ekran reklam\n\nGözünü çalıştır. Hafızadan karıştır. Ne kadar yaklaşabileceğini gör.\nHueMind’i indir, karıştırmaya başla.\n\nARU SOFT."
+  }
+}

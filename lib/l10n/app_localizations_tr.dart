@@ -10,7 +10,7 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appTitle => 'Renk Eşle';
+  String get appTitle => 'HueMind';
 
   @override
   String get homeTagline => 'Gör. Hatırla. Karıştır.';
@@ -52,7 +52,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get modePracticeHint => 'Karıştırırken hedef görünür kalır';
 
   @override
-  String get bestScore => 'En iyi';
+  String get bestScore => 'En iyi skor';
 
   @override
   String bestScoreValue(int score) {
@@ -87,6 +87,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get revealPrompt => 'Bu rengi hatırla';
 
   @override
+  String get skip => 'Geç';
+
+  @override
   String get yourColor => 'Senin rengin';
 
   @override
@@ -94,6 +97,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get you => 'Sen';
+
+  @override
+  String get closeness => 'Yakınlık';
 
   @override
   String get confirm => 'Onayla';
@@ -114,7 +120,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get gotIt => 'Anladım';
 
   @override
-  String get labelPerfect => 'Kusursuz';
+  String get labelPerfect => 'Mükemmel';
 
   @override
   String get labelSoClose => 'Çok yakın';
@@ -195,8 +201,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsColorBlind => 'Renk körü modu';
 
   @override
-  String get settingsColorBlindHint =>
-      'Hedefler kırmızı–yeşil ekseninden kaçınır';
+  String get settingsColorBlindHint => 'Renkler birbirinden daha kolay ayrılır';
 
   @override
   String get settingsRevealTime => 'Hafıza süresi';

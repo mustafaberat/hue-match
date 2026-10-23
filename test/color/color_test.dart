@@ -91,11 +91,12 @@ void main() {
   group('score curve §5.2', () {
     const table = [
       (0.0, 100),
-      (0.02, 90),
-      (0.05, 76),
-      (0.10, 54),
-      (0.20, 19),
-      (0.30, 0),
+      (0.02, 93),
+      (0.05, 84),
+      (0.10, 68),
+      (0.20, 38),
+      (0.30, 12),
+      (0.36, 0),
     ];
     for (final (deltaE, score) in table) {
       test('ΔE $deltaE → $score', () {
@@ -106,6 +107,7 @@ void main() {
     test('beyond max is 0, replay ×0.9', () {
       expect(roundScore(0.5), 0);
       expect(roundScore(0, replayUsed: true), 90);
+      expect(scoreBeforeReplay(0), 100);
       expect(
         roundScore(0.02, replayUsed: true),
         (rawScore(0.02) * 0.9).round(),

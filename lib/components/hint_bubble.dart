@@ -32,11 +32,11 @@ class HintBubble extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.hintBubble,
               borderRadius: BorderRadius.circular(AppRadii.swatchSmall),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
                   color: AppColors.sliderThumbShadow,
                   blurRadius: AppSpacing.xxl,
-                  offset: Offset(0, AppSpacing.sm),
+                  offset: const Offset(0, AppSpacing.sm),
                 ),
               ],
             ),
@@ -49,7 +49,7 @@ class HintBubble extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.brightness_6_rounded,
                     size: AppSizes.icon,
                     color: AppColors.onHintBubble,

@@ -117,7 +117,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Hue Match'**
+  /// **'HueMind'**
   String get appTitle;
 
   /// No description provided for @homeTagline.
@@ -189,7 +189,7 @@ abstract class AppLocalizations {
   /// No description provided for @bestScore.
   ///
   /// In en, this message translates to:
-  /// **'Best'**
+  /// **'Best score'**
   String get bestScore;
 
   /// No description provided for @bestScoreValue.
@@ -240,6 +240,12 @@ abstract class AppLocalizations {
   /// **'Remember this color'**
   String get revealPrompt;
 
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
   /// No description provided for @yourColor.
   ///
   /// In en, this message translates to:
@@ -257,6 +263,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You'**
   String get you;
+
+  /// No description provided for @closeness.
+  ///
+  /// In en, this message translates to:
+  /// **'Closeness'**
+  String get closeness;
 
   /// No description provided for @confirm.
   ///
@@ -459,7 +471,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsColorBlindHint.
   ///
   /// In en, this message translates to:
-  /// **'Targets avoid the red–green axis'**
+  /// **'Colors are easier to tell apart'**
   String get settingsColorBlindHint;
 
   /// No description provided for @settingsRevealTime.

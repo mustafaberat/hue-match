@@ -17,6 +17,7 @@ class RoundResult {
     required this.player,
     required this.deltaE,
     required this.score,
+    required this.scoreBeforeReplay,
     required this.replayUsed,
     required this.diffs,
   });
@@ -25,6 +26,9 @@ class RoundResult {
   final MixColor player;
   final double deltaE;
   final int score;
+
+  /// Ceza öncesi yuvarlanmış puan. Tekrar yoksa [score] ile aynıdır.
+  final int scoreBeforeReplay;
   final bool replayUsed;
   final List<ChannelDiff> diffs;
 
@@ -117,6 +121,7 @@ class MatchEngine {
       player: player,
       deltaE: deltaE,
       score: roundScore(deltaE, replayUsed: used),
+      scoreBeforeReplay: scoreBeforeReplay(deltaE),
       replayUsed: used,
       diffs: explainDifference(target, player),
     );

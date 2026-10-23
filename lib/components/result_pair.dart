@@ -14,6 +14,7 @@ class ResultPair extends StatelessWidget {
     required this.targetLabel,
     required this.playerLabel,
     this.maxSide = AppSizes.resultSwatchMax,
+    this.onBackdrop = false,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class ResultPair extends StatelessWidget {
   final String targetLabel;
   final String playerLabel;
   final double maxSide;
+  final bool onBackdrop;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,9 @@ class ResultPair extends StatelessWidget {
               child: ColorSwatchBox(color: color),
             ),
             const SizedBox(height: AppSpacing.md),
-            Text(label.upperFor(context), style: AppText.caption),
+            onBackdrop
+                ? SkyCaption(label.upperFor(context))
+                : Text(label.upperFor(context), style: AppText.caption),
           ],
         );
         return Row(

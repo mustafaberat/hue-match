@@ -13,6 +13,7 @@ import '../color/composite.dart';
 import '../components/game_header.dart';
 import '../components/round_strip.dart';
 import '../config/app_config.dart';
+import '../config/app_theme.dart';
 import '../config/tokens.dart';
 import '../engine/match_engine.dart';
 import '../l10n/app_localizations.dart';
@@ -109,12 +110,21 @@ class _GameScreenState extends State<GameScreen>
   );
 
   void _onRevealStatus(AnimationStatus status) {
-    if (status == AnimationStatus.completed && _phase == GamePhase.reveal) {
-      setState(() {
-        _phase = GamePhase.mixing;
-        _replaying = false;
-      });
-    }
+    if (status == AnimationStatus.completed) _goToMixing();
+  }
+
+  void _skipReveal() {
+    if (_phase != GamePhase.reveal) return;
+    _reveal.stop();
+    _goToMixing();
+  }
+
+  void _goToMixing() {
+    if (_phase != GamePhase.reveal) return;
+    setState(() {
+      _phase = GamePhase.mixing;
+      _replaying = false;
+    });
   }
 
   void _onReplay() {
@@ -207,6 +217,7 @@ class _GameScreenState extends State<GameScreen>
         builder: (context, _) => RevealView(
           target: _engine.currentTarget,
           remaining: 1 - _reveal.value,
+          onSkip: _skipReveal,
         ),
       ),
       GamePhase.mixing => ListenableBuilder(
@@ -221,8 +232,6 @@ class _GameScreenState extends State<GameScreen>
           showValues: settings.showValues,
           canReplay: _engine.canReplay,
           onReplay: _onReplay,
-          showHint: !settings.onboardingDone,
-          onHintDismissed: () => settings.setOnboardingDone(true),
         ),
       ),
       GamePhase.result => RoundResultView(
@@ -265,7 +274,7 @@ class _GameScreenState extends State<GameScreen>
   }
 }
 
-/// Oyun ekranlarının ortak iskeleti: siyah sahne, güvenli alan, kenar boşluğu.
+/// Oyun ekranlarının ortak iskeleti: temalı zemin, güvenli alan, kenar boşluğu.
 class GameFrame extends StatelessWidget {
   const GameFrame({required this.child, this.header, super.key});
 
@@ -274,8 +283,7 @@ class GameFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.stage,
+    return ThemedScaffold(
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(

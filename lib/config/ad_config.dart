@@ -4,12 +4,31 @@
 /// oluşturulmadı — oluşturulunca `<TBD>` yerlerini doldur ve
 /// `lib/admob/account.json` → `apps[]`'e ekle. `<TBD>` dolmadıkça release de
 /// test id'lerini kullanır (yanlışlıkla boş id ile yayın olmasın).
+///
+/// Play Families: uygulama 5 yaş altı dahil tüm yaşları hedefliyor. Reklam
+/// istekleri çocuk yönelimli, rıza yaşı altı ve G içerik derecesi ile
+/// kişiselleştirilmez.
 library;
 
 import 'package:flutter/foundation.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 abstract final class AdConfig {
   static const String publisherId = 'pub-1508520223269936';
+
+  /// `MobileAds.initialize` öncesi ve sonrası uygulanır.
+  static RequestConfiguration get familiesRequestConfiguration {
+    return RequestConfiguration(
+      maxAdContentRating: MaxAdContentRating.g,
+      // ignore: deprecated_member_use
+      tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+      // ignore: deprecated_member_use
+      tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes,
+      ageRestrictedTreatment: AgeRestrictedTreatment.child,
+    );
+  }
+
+  static const AdRequest adRequest = AdRequest(nonPersonalizedAds: true);
 
   // --- Google test ids -----------------------------------------------------
   static const String testAppIdAndroid =

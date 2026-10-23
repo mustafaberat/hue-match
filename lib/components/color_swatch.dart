@@ -15,40 +15,47 @@ extension MixColorDisplay on MixColor {
   Color get displayColor => visible.toColor();
 }
 
-/// Siyah sahnede ince nötr çerçeveli renk kutusu (§2).
+/// Nötr paspartu + çerçeve; dolgu oyunun rengi (karar vermeyi bozmaz).
 class ColorSwatchBox extends StatelessWidget {
   const ColorSwatchBox({
     required this.color,
     this.caption,
-    this.radius = AppRadii.swatch,
+    this.radius,
     super.key,
   });
 
   final Color color;
   final String? caption;
-  final double radius;
+  final double? radius;
 
   @override
   Widget build(BuildContext context) {
+    final r = radius ?? AppRadii.swatch;
+    final mat = AppSizes.swatchMat;
     return AnimatedContainer(
       duration: AppDurations.fast,
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(radius),
-        border: Border.all(
-          color: AppColors.swatchFrame,
-          width: AppSizes.swatchFrameWidth,
-        ),
+        color: AppColors.stage,
+        borderRadius: BorderRadius.circular(r),
+        border: Border.fromBorderSide(AppBorders.swatch),
+        boxShadow: AppShadows.card,
       ),
-      child: caption == null
-          ? null
-          : Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                child: SwatchCaption(text: caption!),
+      padding: EdgeInsets.all(mat),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular((r - mat).clamp(4, r)),
+        ),
+        child: caption == null
+            ? null
+            : Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: SwatchCaption(text: caption!),
+                ),
               ),
-            ),
+      ),
     );
   }
 }
@@ -62,9 +69,9 @@ class SwatchCaption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.swatchCaptionScrim,
-        borderRadius: BorderRadius.all(Radius.circular(AppRadii.chip)),
+        borderRadius: const BorderRadius.all(Radius.circular(AppRadii.chip)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -73,7 +80,7 @@ class SwatchCaption extends StatelessWidget {
         ),
         child: Text(
           text.upperFor(context),
-          style: AppText.caption.copyWith(color: AppColors.textPrimary),
+          style: AppText.caption.copyWith(color: AppColors.onDark),
         ),
       ),
     );

@@ -1,4 +1,4 @@
-# Hue Match — Yapılacaklar
+# HueMind — Yapılacaklar
 
 ## En iyi skor
 - [x] En iyi skor şu an cihazda yerel tutuluyor (SharedPreferences, mod başına):
