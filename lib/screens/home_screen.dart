@@ -215,6 +215,7 @@ class _HueSquare extends StatelessWidget {
         ].reduce((a, b) => a < b ? a : b);
         final mascotSize = AppSizes.mascotHome;
         final peek = mascotSize * AppSizes.homeMascotPeekFraction;
+        final mascotCanvas = ThemeMascot.canvasSize(mascotSize);
         return SizedBox(
           height: side + peek,
           width: side,
@@ -224,6 +225,8 @@ class _HueSquare extends StatelessWidget {
             children: [
               Positioned(
                 top: 0,
+                width: mascotCanvas.width,
+                height: mascotCanvas.height,
                 child: ThemeMascot(
                   mood: MascotMood.happy,
                   size: mascotSize,

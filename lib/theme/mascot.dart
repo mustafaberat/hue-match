@@ -1,8 +1,8 @@
 /// Boya kalemi maskot — CustomPainter, ifade skora göre değişir.
 ///
-/// Düşük skor yüzü asla kızgın değil: kalkık kaş, minik üzgün-gülümseme, ter.
-/// Silüet: konik uç (menteşeli kapak), dalgalı kâğıt sargı, uzun gövde.
-/// Uç biraz kalkık; kıvrımlı pembe beyin aralıktan bakar.
+/// Düşük skor yüzü asla kızgın değil: ince endişeli kaş, minik gülümseme, ter.
+/// Silüet: sağlam konik mum uç, dalgalı kâğıt sargı, uzun gövde, minik kollar.
+/// Ucun üstünde yüzen küçük ampul: fikir / hatırladım.
 library;
 
 import 'dart:math' as math;
@@ -44,31 +44,45 @@ class ThemeMascot extends StatelessWidget {
   final double size;
   final Color? bodyColor;
 
-  /// Silüete göre tuval — home yerleşimi taşmadan bunu kullanır.
-  static Size canvasSize(double size) => Size(size * 0.90, size);
+  /// Silüete göre tuval — üstte ampul payı; home yerleşimi taşmadan bunu kullanır.
+  static Size canvasSize(double size) => Size(size * 1.02, size * 1.32);
 
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
       child: CustomPaint(
         size: canvasSize(size),
-        painter: CrayonBuddyPainter(mood: mood, tint: bodyColor),
+        painter: CrayonBuddyPainter(
+          mood: mood,
+          tint: bodyColor,
+          crayonSize: size,
+        ),
       ),
     );
   }
 }
 
-/// Boya kalemi: konik uç, menteşeli kapak, beyin, kâğıt sargı, dalgalı etiket.
+/// Boya kalemi: sağlam konik uç, kâğıt sargı, dalgalı etiket, yüzen ampul.
 class CrayonBuddyPainter extends CustomPainter {
-  CrayonBuddyPainter({required this.mood, this.tint});
+  CrayonBuddyPainter({required this.mood, required this.crayonSize, this.tint});
 
   final MascotMood mood;
   final Color? tint;
+  final double crayonSize;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final w = size.width;
-    final h = size.height;
+    final w = crayonSize * 0.90;
+    final h = crayonSize;
+    final ox = (size.width - w) / 2;
+    final oy = size.height - h;
+    canvas.save();
+    canvas.translate(ox, oy);
+    _paintCrayon(canvas, w, h);
+    canvas.restore();
+  }
+
+  void _paintCrayon(Canvas canvas, double w, double h) {
     final ink = const Color(0xFF3E2A1A);
     final sw = math.max(2.4, w * 0.032);
     final stroke = _inkStroke(ink, sw);
@@ -83,6 +97,7 @@ class CrayonBuddyPainter extends CustomPainter {
     final bodyW = w * 0.42;
     final left = cx - bodyW / 2;
     final right = cx + bodyW / 2;
+    final bothArms = mood != MascotMood.happy;
 
     _crayonArm(
       canvas,
@@ -101,7 +116,7 @@ class CrayonBuddyPainter extends CustomPainter {
       armFill,
       stroke,
     );
-    if (mood == MascotMood.ok) {
+    if (bothArms) {
       _crayonArm(
         canvas,
         Path()
@@ -125,8 +140,8 @@ class CrayonBuddyPainter extends CustomPainter {
     final paperBot = h * 0.975;
     final paperBody = RRect.fromRectAndCorners(
       Rect.fromLTRB(left, paperTop, right, paperBot),
-      topLeft: Radius.circular(w * 0.055),
-      topRight: Radius.circular(w * 0.055),
+      topLeft: Radius.circular(w * 0.04),
+      topRight: Radius.circular(w * 0.04),
       bottomLeft: Radius.circular(w * 0.09),
       bottomRight: Radius.circular(w * 0.09),
     );
@@ -150,7 +165,7 @@ class CrayonBuddyPainter extends CustomPainter {
       stroke,
     );
 
-    _paintOpeningBrainAndTip(
+    final tipPeak = _paintIntactTip(
       canvas,
       cx: cx,
       h: h,
@@ -184,13 +199,22 @@ class CrayonBuddyPainter extends CustomPainter {
       stroke: stroke,
       blush: const Color(0x55E07A3A),
       tongue: const Color(0xFFE07A3A),
-      sweatAt: Offset(left - w * 0.04, h * 0.30),
-      sparkleAt: Offset(right + w * 0.05, h * 0.04),
-      handAt: mood == MascotMood.ok ? null : Offset(right + w * 0.15, h * 0.62),
+      sweatAt: Offset(left - w * 0.04, h * 0.32),
+      handAt: bothArms ? null : Offset(right + w * 0.15, h * 0.62),
+    );
+
+    _paintIdeaSpark(
+      canvas,
+      tip: tipPeak,
+      w: w,
+      h: h,
+      sw: sw,
+      ink: ink,
+      mood: mood,
     );
   }
 
-  void _paintOpeningBrainAndTip(
+  Offset _paintIntactTip(
     Canvas canvas, {
     required double cx,
     required double h,
@@ -201,180 +225,169 @@ class CrayonBuddyPainter extends CustomPainter {
     required double sw,
     required Paint stroke,
   }) {
-    final opening = Path()
-      ..addOval(
-        Rect.fromCenter(
-          center: Offset(cx, paperTop + h * 0.006),
-          width: bodyW * 0.90,
-          height: h * 0.05,
-        ),
-      );
-    canvas.drawPath(opening, Paint()..color = _tint(wax, 1.12));
-    canvas.drawPath(opening, stroke);
-    if (darkWax) _lightRimPath(canvas, opening, sw);
-
-    final hinge = Offset(cx + bodyW / 2, paperTop + h * 0.002);
-    final coneH = paperTop - h * 0.008;
-    canvas.save();
-    canvas.translate(hinge.dx, hinge.dy);
-    canvas.rotate(-0.16);
+    final tipY = h * 0.012;
+    final baseY = paperTop + h * 0.012;
     final cone = Path()
-      ..moveTo(0, 0)
-      ..lineTo(-bodyW, 0)
-      ..lineTo(-bodyW / 2, -coneH)
+      ..moveTo(cx - bodyW / 2, baseY)
+      ..lineTo(cx, tipY)
+      ..lineTo(cx + bodyW / 2, baseY)
       ..close();
     canvas.drawPath(cone, Paint()..color = wax);
     canvas.drawPath(
       Path()
-        ..moveTo(-bodyW / 2, -coneH)
-        ..lineTo(0, 0)
-        ..lineTo(-bodyW * 0.38, 0)
+        ..moveTo(cx, tipY)
+        ..lineTo(cx + bodyW / 2, baseY)
+        ..lineTo(cx + bodyW * 0.06, baseY)
         ..close(),
       Paint()..color = _tint(wax, 0.80),
     );
     canvas.drawPath(
       Path()
-        ..moveTo(-bodyW * 0.72, -coneH * 0.10)
-        ..lineTo(-bodyW * 0.54, -coneH * 0.68)
-        ..lineTo(-bodyW * 0.44, -coneH * 0.10),
+        ..moveTo(cx - bodyW * 0.22, baseY - (baseY - tipY) * 0.10)
+        ..lineTo(cx - bodyW * 0.04, tipY + (baseY - tipY) * 0.32)
+        ..lineTo(cx + bodyW * 0.06, baseY - (baseY - tipY) * 0.10),
       Paint()..color = const Color(0x66FFFFFF),
     );
     canvas.drawPath(cone, stroke);
     if (darkWax) _lightRimPath(canvas, cone, sw);
-    canvas.restore();
-    canvas.drawCircle(
-      hinge,
-      math.max(1.8, bodyW * 0.055),
-      Paint()..color = wax,
-    );
-    canvas.drawCircle(hinge, math.max(1.8, bodyW * 0.055), stroke);
-
-    _paintBrain(
-      canvas,
-      center: Offset(cx, paperTop + h * 0.062),
-      rw: bodyW * 0.40,
-      rh: h * 0.095,
-      sw: sw,
-    );
+    return Offset(cx, tipY);
   }
 
-  void _paintBrain(
+  void _paintIdeaSpark(
     Canvas canvas, {
-    required Offset center,
-    required double rw,
-    required double rh,
+    required Offset tip,
+    required double w,
+    required double h,
     required double sw,
+    required Color ink,
+    required MascotMood mood,
   }) {
-    const brain = Color(0xFFFF7FB2);
-    const brainShade = Color(0xFFD44E8C);
-    const brainLit = Color(0xFFFFD0E6);
-    const brainLine = Color(0xFFB03A72);
-    final fill = Paint()..color = brain;
-    final outline = _inkStroke(brainLine, math.max(1.6, sw * 0.75));
+    final bulbC = tip + Offset(w * 0.16, -h * 0.118);
+    final r = math.max(6.6, w * 0.115);
+    final high = mood == MascotMood.happy;
+    final low = mood == MascotMood.encouraging;
 
-    final leftC = center + Offset(-rw * 0.30, rh * 0.04);
-    final rightC = center + Offset(rw * 0.30, rh * 0.04);
-    final lobe = Size(rw * 1.20, rh * 1.95);
-    canvas.drawOval(
-      Rect.fromCenter(center: leftC, width: lobe.width, height: lobe.height),
-      fill,
+    final glowOuter = low
+        ? const Color(0x28FFE082)
+        : high
+        ? const Color(0x55FFE082)
+        : const Color(0x38FFE082);
+    final glowInner = low
+        ? const Color(0x33FFF59D)
+        : high
+        ? const Color(0x77FFF59D)
+        : const Color(0x55FFF59D);
+    canvas.drawCircle(
+      bulbC,
+      r *
+          (high
+              ? 1.90
+              : low
+              ? 1.45
+              : 1.70),
+      Paint()..color = glowOuter,
     );
-    canvas.drawOval(
-      Rect.fromCenter(center: rightC, width: lobe.width, height: lobe.height),
-      fill,
+    canvas.drawCircle(
+      bulbC,
+      r *
+          (high
+              ? 1.32
+              : low
+              ? 1.12
+              : 1.22),
+      Paint()..color = glowInner,
     );
 
-    final bumpR = math.max(2.2, rw * 0.28);
-    for (final lobeC in [leftC, rightC]) {
-      canvas.drawCircle(lobeC + Offset(-rw * 0.18, -rh * 0.72), bumpR, fill);
-      canvas.drawCircle(
-        lobeC + Offset(rw * 0.20, -rh * 0.78),
-        bumpR * 0.9,
-        fill,
-      );
-      canvas.drawCircle(lobeC + Offset(0, rh * 0.78), bumpR * 0.85, fill);
+    final rayColor = low ? const Color(0xCCF9A825) : const Color(0xFFF9A825);
+    final ticks = _inkStroke(
+      rayColor,
+      math.max(low ? 2.6 : 2.0, sw * (low ? 1.05 : 0.85)),
+    );
+    final rays = high
+        ? const [-2.70, -2.20, -1.85, -1.57, -1.28, -0.94, -0.48]
+        : low
+        ? const [-1.92]
+        : const [-2.35, -1.57, -0.78];
+    final rayInner = low ? 1.22 : 1.38;
+    final rayOuter = high
+        ? 2.08
+        : low
+        ? 1.95
+        : 1.92;
+    for (final a in rays) {
+      final inner =
+          bulbC +
+          Offset(math.cos(a) * r * rayInner, math.sin(a) * r * rayInner);
+      final outer =
+          bulbC +
+          Offset(math.cos(a) * r * rayOuter, math.sin(a) * r * rayOuter);
+      canvas.drawLine(inner, outer, ticks);
+    }
+    if (high) {
+      _sparkle4(canvas, bulbC + Offset(r * 1.52, -r * 0.78), r * 0.38);
+      _sparkle4(canvas, bulbC + Offset(-r * 1.28, -r * 0.48), r * 0.26);
+    } else if (!low) {
+      _sparkle4(canvas, bulbC + Offset(r * 1.42, -r * 0.62), r * 0.28);
+    } else {
+      _flickerMarks(canvas, bulbC, r, sw);
     }
 
-    canvas.drawPath(_brainOutline(center, rw, rh), outline);
-
-    final fold = Paint()
-      ..color = brainLine
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = math.max(1.5, sw * 0.70)
-      ..strokeCap = StrokeCap.round;
-    final gyri = Paint()
-      ..color = brainShade
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = math.max(1.3, sw * 0.55)
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawPath(
-      Path()
-        ..moveTo(center.dx, center.dy - rh * 0.85)
-        ..cubicTo(
-          center.dx - rw * 0.10,
-          center.dy - rh * 0.10,
-          center.dx + rw * 0.08,
-          center.dy + rh * 0.25,
-          center.dx,
-          center.dy + rh * 0.82,
+    final glassFill = low
+        ? const Color(0xFFEDCC4E)
+        : high
+        ? const Color(0xFFFFD54F)
+        : const Color(0xFFFFE082);
+    final glass = Path()
+      ..addOval(Rect.fromCircle(center: bulbC, radius: r))
+      ..addOval(
+        Rect.fromCenter(
+          center: bulbC + Offset(0, r * 0.42),
+          width: r * 1.55,
+          height: r * 1.15,
         ),
-      fold,
+      );
+    canvas.drawPath(glass, Paint()..color = glassFill);
+    canvas.drawPath(glass, _inkStroke(ink, math.max(1.9, sw * 0.9)));
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: bulbC + Offset(-r * 0.28, -r * 0.18),
+        width: r * 0.46,
+        height: r * 0.30,
+      ),
+      Paint()..color = Color(low ? 0x66FFFFFF : 0xAAFFFFFF),
     );
+
+    final filament = Paint()
+      ..color = low ? const Color(0xFFB86A20) : const Color(0xFFE65100)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = math.max(1.3, sw * 0.5)
+      ..strokeCap = StrokeCap.round;
     canvas.drawPath(
       Path()
-        ..moveTo(leftC.dx - rw * 0.15, leftC.dy - rh * 0.35)
-        ..cubicTo(
-          leftC.dx + rw * 0.05,
-          leftC.dy - rh * 0.70,
-          leftC.dx + rw * 0.28,
-          leftC.dy - rh * 0.05,
-          leftC.dx + rw * 0.18,
-          leftC.dy + rh * 0.35,
-        ),
-      gyri,
-    );
-    canvas.drawPath(
-      Path()
-        ..moveTo(leftC.dx - rw * 0.08, leftC.dy + rh * 0.10)
+        ..moveTo(bulbC.dx - r * 0.26, bulbC.dy + r * 0.22)
         ..quadraticBezierTo(
-          leftC.dx + rw * 0.18,
-          leftC.dy + rh * 0.55,
-          leftC.dx + rw * 0.32,
-          leftC.dy + rh * 0.15,
+          bulbC.dx,
+          bulbC.dy - r * (low ? 0.12 : 0.32),
+          bulbC.dx + r * 0.26,
+          bulbC.dy + r * 0.22,
         ),
-      gyri,
-    );
-    canvas.drawPath(
-      Path()
-        ..moveTo(rightC.dx - rw * 0.18, rightC.dy - rh * 0.30)
-        ..cubicTo(
-          rightC.dx + rw * 0.08,
-          rightC.dy - rh * 0.72,
-          rightC.dx + rw * 0.32,
-          rightC.dy - rh * 0.02,
-          rightC.dx + rw * 0.10,
-          rightC.dy + rh * 0.38,
-        ),
-      gyri,
+      filament,
     );
 
-    canvas.drawOval(
-      Rect.fromCenter(
-        center: leftC + Offset(-rw * 0.12, -rh * 0.35),
-        width: rw * 0.42,
-        height: rh * 0.32,
-      ),
-      Paint()..color = brainLit,
+    final baseTop = bulbC + Offset(0, r * 1.10);
+    final neck = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: baseTop, width: r * 0.78, height: r * 0.38),
+      Radius.circular(r * 0.08),
     );
-    canvas.drawOval(
-      Rect.fromCenter(
-        center: rightC + Offset(-rw * 0.06, -rh * 0.40),
-        width: rw * 0.28,
-        height: rh * 0.20,
-      ),
-      Paint()..color = const Color(0x66FFFFFF),
-    );
+    canvas.drawRRect(neck, Paint()..color = const Color(0xFFD7C4A0));
+    canvas.drawRRect(neck, _inkStroke(ink, math.max(1.5, sw * 0.7)));
+    for (final t in [-0.07, 0.07]) {
+      canvas.drawLine(
+        Offset(baseTop.dx - r * 0.24, baseTop.dy + r * t),
+        Offset(baseTop.dx + r * 0.24, baseTop.dy + r * t),
+        _inkStroke(ink, math.max(1.1, sw * 0.4)),
+      );
+    }
   }
 
   void _crayonArm(
@@ -436,7 +449,7 @@ class CrayonBuddyPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CrayonBuddyPainter old) =>
-      old.mood != mood || old.tint != tint;
+      old.mood != mood || old.tint != tint || old.crayonSize != crayonSize;
 }
 
 Paint _inkStroke(Color ink, double width) {
@@ -461,51 +474,7 @@ void _lightRimPath(Canvas canvas, Path path, double sw) {
   canvas.drawPath(path, _lightRimPaint(sw));
 }
 
-Path _brainOutline(Offset c, double rw, double rh) {
-  return Path()
-    ..moveTo(c.dx, c.dy - rh * 0.08)
-    ..cubicTo(
-      c.dx - rw * 0.22,
-      c.dy - rh * 1.05,
-      c.dx - rw * 0.95,
-      c.dy - rh * 0.85,
-      c.dx - rw,
-      c.dy - rh * 0.10,
-    )
-    ..cubicTo(
-      c.dx - rw * 1.05,
-      c.dy + rh * 0.55,
-      c.dx - rw * 0.55,
-      c.dy + rh * 1.02,
-      c.dx - rw * 0.16,
-      c.dy + rh * 0.72,
-    )
-    ..quadraticBezierTo(
-      c.dx,
-      c.dy + rh * 0.38,
-      c.dx + rw * 0.16,
-      c.dy + rh * 0.72,
-    )
-    ..cubicTo(
-      c.dx + rw * 0.55,
-      c.dy + rh * 1.02,
-      c.dx + rw * 1.05,
-      c.dy + rh * 0.55,
-      c.dx + rw,
-      c.dy - rh * 0.10,
-    )
-    ..cubicTo(
-      c.dx + rw * 0.95,
-      c.dy - rh * 0.85,
-      c.dx + rw * 0.22,
-      c.dy - rh * 1.05,
-      c.dx,
-      c.dy - rh * 0.08,
-    )
-    ..close();
-}
-
-/// Ortak yüz. Encouraging = kalkık kaş + minik gülücük + ter — asla çatık/kızgın.
+/// Ortak yüz. Encouraging = ince endişeli kaş + minik gülücük + ter — asla çatık/kızgın.
 void _paintPairFace({
   required Canvas canvas,
   required Offset left,
@@ -520,7 +489,6 @@ void _paintPairFace({
   required Color blush,
   required Color tongue,
   Offset? sweatAt,
-  Offset? sparkleAt,
   Offset? handAt,
 }) {
   final white = Paint()..color = const Color(0xFFFFFFF6);
@@ -565,11 +533,6 @@ void _paintPairFace({
         ),
         Paint()..color = tongue,
       );
-      _sparkle4(
-        canvas,
-        sparkleAt ?? right + Offset(eyeR * 1.6, -eyeR * 1.3),
-        eyeR * 0.42,
-      );
       if (handAt != null) {
         _waveHand(canvas, handAt, eyeR * 1.7, stroke);
       }
@@ -606,7 +569,7 @@ void _paintPairFace({
           Paint()..color = const Color(0xFFFFFFFF),
         );
       }
-      _raisedBrows(canvas, left, right, eyeR, stroke);
+      _worriedBrows(canvas, left, right, eyeR, ink);
       final oops = Path()
         ..moveTo(mouth.dx - mouthW * 0.26, mouth.dy)
         ..quadraticBezierTo(
@@ -622,43 +585,41 @@ void _paintPairFace({
         eyeR * 0.72,
         stroke,
       );
-      _sparkle4(
-        canvas,
-        sparkleAt ?? right + Offset(eyeR * 1.55, -eyeR * 1.15),
-        eyeR * 0.38,
-      );
-      if (handAt != null) {
-        _waveHand(canvas, handAt, eyeR * 1.7, stroke);
-      }
   }
 }
 
-/// Kalkık kaş: iç uçlar aşağı düşmez (çatık / kızgın değil).
-void _raisedBrows(
+/// İnce, kısa, endişeli-tatlı kaş: iç uçlar kalkık, yumuşak yay — asla kalın/çatık.
+void _worriedBrows(
   Canvas canvas,
   Offset left,
   Offset right,
   double r,
-  Paint stroke,
+  Color ink,
 ) {
+  final brow = Paint()
+    ..color = ink
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = math.max(1.15, r * 0.14)
+    ..strokeCap = StrokeCap.round
+    ..strokeJoin = StrokeJoin.round;
   final lb = Path()
-    ..moveTo(left.dx - r * 0.85, left.dy - r * 1.05)
+    ..moveTo(left.dx - r * 0.46, left.dy - r * 1.16)
     ..quadraticBezierTo(
-      left.dx - r * 0.05,
-      left.dy - r * 1.55,
-      left.dx + r * 0.55,
-      left.dy - r * 1.12,
+      left.dx - r * 0.04,
+      left.dy - r * 1.34,
+      left.dx + r * 0.36,
+      left.dy - r * 1.50,
     );
   final rb = Path()
-    ..moveTo(right.dx - r * 0.55, right.dy - r * 1.12)
+    ..moveTo(right.dx - r * 0.36, right.dy - r * 1.50)
     ..quadraticBezierTo(
-      right.dx + r * 0.05,
-      right.dy - r * 1.55,
-      right.dx + r * 0.85,
-      right.dy - r * 1.05,
+      right.dx + r * 0.04,
+      right.dy - r * 1.34,
+      right.dx + r * 0.46,
+      right.dy - r * 1.16,
     );
-  canvas.drawPath(lb, stroke);
-  canvas.drawPath(rb, stroke);
+  canvas.drawPath(lb, brow);
+  canvas.drawPath(rb, brow);
 }
 
 void _sweatDrop(Canvas canvas, Offset c, double r, Paint stroke) {
@@ -713,6 +674,27 @@ void _sparkle4(Canvas canvas, Offset c, double r) {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.1,
   );
+}
+
+void _flickerMarks(Canvas canvas, Offset bulbC, double r, double sw) {
+  final zap = Paint()
+    ..color = const Color(0xFFF9A825)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = math.max(1.9, sw * 0.72)
+    ..strokeCap = StrokeCap.round
+    ..strokeJoin = StrokeJoin.round;
+  final right = Path()
+    ..moveTo(bulbC.dx + r * 1.18, bulbC.dy + r * 0.12)
+    ..lineTo(bulbC.dx + r * 1.58, bulbC.dy - r * 0.22)
+    ..lineTo(bulbC.dx + r * 1.34, bulbC.dy - r * 0.06)
+    ..lineTo(bulbC.dx + r * 1.82, bulbC.dy - r * 0.58);
+  final left = Path()
+    ..moveTo(bulbC.dx - r * 1.12, bulbC.dy + r * 0.22)
+    ..lineTo(bulbC.dx - r * 1.48, bulbC.dy - r * 0.10)
+    ..lineTo(bulbC.dx - r * 1.26, bulbC.dy + r * 0.04)
+    ..lineTo(bulbC.dx - r * 1.62, bulbC.dy - r * 0.42);
+  canvas.drawPath(right, zap);
+  canvas.drawPath(left, zap);
 }
 
 void _waveHand(Canvas canvas, Offset c, double s, Paint stroke) {

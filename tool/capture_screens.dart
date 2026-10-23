@@ -518,6 +518,11 @@ class _MascotSheet extends StatelessWidget {
                   size: 88,
                   bodyColor: Color(0xFFE89648),
                 ),
+                ThemeMascot(
+                  mood: MascotMood.ok,
+                  size: 64,
+                  bodyColor: Color(0xFF2B6CFF),
+                ),
               ],
             ),
           ),

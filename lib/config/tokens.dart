@@ -115,8 +115,8 @@ abstract final class AppSizes {
   static const double mascotEnd = 152;
   static const double mascotHowTo = 104;
 
-  /// Home'da kare arkasına duran kalemin üstü (uç + beyin + göz) bu kadar taşar.
-  static const double homeMascotPeekFraction = 0.50;
+  /// Home'da kare arkasına duran kalemin üstü (ampul + uç + göz) bu kadar taşar.
+  static const double homeMascotPeekFraction = 0.82;
 
   static const double compareNotchWidth = 10;
   static const double compareNotchHeight = 22;
