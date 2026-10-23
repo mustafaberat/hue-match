@@ -32,11 +32,11 @@ void main() {
     expect(mascotMoodForScore(200, max: 500), MascotMood.encouraging);
   });
 
-  test('mascot canvas leaves room for the thought-bubble', () {
+  test('mascot canvas leaves room for the colour-orbit above the tip', () {
     const size = 88.0;
     final canvas = ThemeMascot.canvasSize(size);
-    expect(canvas.height, greaterThan(size));
-    expect(canvas.width, greaterThan(size));
+    expect(canvas.height, greaterThan(size * 1.30));
+    expect(canvas.width, inInclusiveRange(size, size * 1.12));
   });
 
   test('dark crayon tints are lifted, mid colours stay', () {

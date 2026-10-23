@@ -2,7 +2,7 @@
 ///
 /// Düşük skor yüzü asla kızgın değil: ince endişeli kaş, minik gülümseme, ter.
 /// Silüet: sağlam konik mum uç, dalgalı kâğıt sargı, uzun gövde, minik kollar.
-/// Ucun sağ-üstünde düşünce balonu: içinde küçük parlayan ampul.
+/// Ucun üstünde Renk Yörüngesi: kesik elips + kırmızı / sarı / mavi damla.
 library;
 
 import 'dart:math' as math;
@@ -44,8 +44,8 @@ class ThemeMascot extends StatelessWidget {
   final double size;
   final Color? bodyColor;
 
-  /// Silüete göre tuval — sağ-üstte düşünce balonu payı; home taşmadan bunu kullanır.
-  static Size canvasSize(double size) => Size(size * 1.20, size * 1.36);
+  /// Silüete göre tuval — uç üstünde renk yörüngesi; kollar ve el taşmaz.
+  static Size canvasSize(double size) => Size(size * 1.06, size * 1.36);
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class ThemeMascot extends StatelessWidget {
   }
 }
 
-/// Boya kalemi: sağlam konik uç, kâğıt sargı, dalgalı etiket, düşünce balonu.
+/// Boya kalemi: sağlam konik uç, kâğıt sargı, dalgalı etiket, renk yörüngesi.
 class CrayonBuddyPainter extends CustomPainter {
   CrayonBuddyPainter({required this.mood, required this.crayonSize, this.tint});
 
@@ -203,7 +203,7 @@ class CrayonBuddyPainter extends CustomPainter {
       handAt: bothArms ? null : Offset(right + w * 0.15, h * 0.62),
     );
 
-    _paintThoughtBubble(
+    _paintColourOrbit(
       canvas,
       tip: tipPeak,
       w: w,
@@ -253,7 +253,7 @@ class CrayonBuddyPainter extends CustomPainter {
     return Offset(cx, tipY);
   }
 
-  void _paintThoughtBubble(
+  void _paintColourOrbit(
     Canvas canvas, {
     required Offset tip,
     required double w,
@@ -264,59 +264,73 @@ class CrayonBuddyPainter extends CustomPainter {
   }) {
     final high = mood == MascotMood.happy;
     final low = mood == MascotMood.encouraging;
-    final outline = _inkStroke(ink, sw);
+    final cy = tip.dy - h * (low ? 0.10 : 0.125);
+    final cx = tip.dx;
+    final rx = w * (low ? 0.24 : 0.30);
+    final ry = w * (low ? 0.07 : 0.085);
+    final rot = low ? 0.12 : -0.10;
+    final dropR =
+        w *
+        (high
+            ? 0.064
+            : low
+            ? 0.05
+            : 0.058);
 
-    final trail = <(Offset, double)>[
-      (tip + Offset(w * 0.080, -h * 0.008), w * 0.016),
-      (tip + Offset(w * 0.145, -h * 0.048), w * 0.026),
-      (tip + Offset(w * 0.210, -h * 0.092), w * 0.036),
-    ];
-    const cloudFill = Color(0xFFFFFFF8);
-    for (final (c, r) in trail) {
-      canvas.drawCircle(c, r, Paint()..color = cloudFill);
-      canvas.drawCircle(c, r, outline);
+    canvas.save();
+    canvas.translate(cx, cy);
+    canvas.rotate(rot);
+    canvas.drawPath(
+      _dashedOval(
+        Rect.fromCenter(center: Offset.zero, width: rx * 2, height: ry * 2),
+        dash: sw * 1.2,
+        gap: sw * 1.4,
+      ),
+      Paint()
+        ..color = const Color(0x733E2A1A)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = sw * 0.75
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
+    );
+    canvas.restore();
+
+    const red = Color(0xFFFF5A5F);
+    const yellow = Color(0xFFFFC93C);
+    const blue = Color(0xFF3D8BFF);
+    final drops = low
+        ? const [
+            (math.pi * 0.92, red, -0.2),
+            (math.pi * 0.40, yellow, 0.1),
+            (math.pi * 0.08, blue, 0.35),
+          ]
+        : const [
+            (math.pi * 1.0, red, -0.25),
+            (math.pi * 1.5, yellow, 0.0),
+            (math.pi * 0.02, blue, 0.25),
+          ];
+    final cosR = math.cos(rot);
+    final sinR = math.sin(rot);
+    for (final (angle, color, tilt) in drops) {
+      final ex = math.cos(angle) * rx;
+      final ey = math.sin(angle) * ry;
+      _paintOrbitDrop(
+        canvas,
+        x: cx + ex * cosR - ey * sinR,
+        y: cy + ex * sinR + ey * cosR,
+        r: dropR,
+        tilt: tilt,
+        fill: color,
+        ink: ink,
+        sw: sw,
+      );
     }
 
-    final cloudC = tip + Offset(w * 0.33, -h * 0.162);
-    final rw = w * 0.34;
-    final rh = w * 0.26;
-    final cloud = _scallopedCloud(cloudC, rw, rh);
-
-    final glow = low
-        ? const Color(0x33FFE082)
-        : high
-        ? const Color(0x66FFE082)
-        : const Color(0x44FFE082);
-    canvas.drawPath(
-      cloud,
-      Paint()
-        ..color = glow
-        ..maskFilter = MaskFilter.blur(
-          BlurStyle.normal,
-          high
-              ? 5.0
-              : low
-              ? 2.5
-              : 3.5,
-        ),
-    );
-    canvas.drawPath(cloud, Paint()..color = cloudFill);
-    _paintTinyBulb(
-      canvas,
-      center: cloudC + Offset(0, -rh * 0.04),
-      r: math.max(4.4, w * 0.078),
-      sw: sw,
-      ink: ink,
-      mood: mood,
-    );
-    canvas.drawPath(cloud, outline);
-
     if (high) {
-      _sparkle4(
-        canvas,
-        cloudC + Offset(rw * 0.48, -rh * 0.52),
-        math.max(3.2, w * 0.042),
-      );
+      _sparkle4(canvas, Offset(cx + rx * 1.12, cy - ry * 1.9), w * 0.05);
+      _sparkle4(canvas, Offset(cx - rx * 1.15, cy - ry * 1.6), w * 0.035);
+    } else if (!low) {
+      _sparkle4(canvas, Offset(cx + rx * 1.1, cy - ry * 1.7), w * 0.04);
     }
   }
 
@@ -583,102 +597,59 @@ void _sweatDrop(Canvas canvas, Offset c, double r, Paint stroke) {
   );
 }
 
-Path _scallopedCloud(Offset c, double rw, double rh) {
-  final bumps = <Rect>[
-    Rect.fromCenter(center: c, width: rw * 0.72, height: rh * 0.58),
-    Rect.fromCenter(
-      center: c + Offset(-rw * 0.28, rh * 0.14),
-      width: rw * 0.46,
-      height: rh * 0.48,
-    ),
-    Rect.fromCenter(
-      center: c + Offset(rw * 0.28, rh * 0.12),
-      width: rw * 0.44,
-      height: rh * 0.46,
-    ),
-    Rect.fromCenter(
-      center: c + Offset(0, -rh * 0.24),
-      width: rw * 0.50,
-      height: rh * 0.50,
-    ),
-    Rect.fromCenter(
-      center: c + Offset(-rw * 0.24, -rh * 0.10),
-      width: rw * 0.40,
-      height: rh * 0.42,
-    ),
-    Rect.fromCenter(
-      center: c + Offset(rw * 0.24, -rh * 0.08),
-      width: rw * 0.38,
-      height: rh * 0.40,
-    ),
-  ];
-  var path = Path()..addOval(bumps.first);
-  for (final oval in bumps.skip(1)) {
-    path = Path.combine(PathOperation.union, path, Path()..addOval(oval));
+Path _dashedOval(Rect oval, {required double dash, required double gap}) {
+  final source = Path()..addOval(oval);
+  final dest = Path();
+  for (final metric in source.computeMetrics()) {
+    var distance = 0.0;
+    var draw = true;
+    while (distance < metric.length) {
+      final next = math.min(distance + (draw ? dash : gap), metric.length);
+      if (draw) {
+        dest.addPath(metric.extractPath(distance, next), Offset.zero);
+      }
+      distance = next;
+      draw = !draw;
+    }
   }
-  return path;
+  return dest;
 }
 
-void _paintTinyBulb(
+void _paintOrbitDrop(
   Canvas canvas, {
-  required Offset center,
+  required double x,
+  required double y,
   required double r,
-  required double sw,
+  required double tilt,
+  required Color fill,
   required Color ink,
-  required MascotMood mood,
+  required double sw,
 }) {
-  final high = mood == MascotMood.happy;
-  final low = mood == MascotMood.encouraging;
-  final glass = low
-      ? const Color(0xFFF0D56A)
-      : high
-      ? const Color(0xFFFFD54F)
-      : const Color(0xFFFFE082);
-  final glow = low
-      ? const Color(0x44FFF59D)
-      : high
-      ? const Color(0x88FFF59D)
-      : const Color(0x66FFF59D);
-  canvas.drawCircle(
-    center,
-    r *
-        (high
-            ? 1.55
-            : low
-            ? 1.18
-            : 1.32),
-    Paint()..color = glow,
-  );
-  canvas.drawCircle(center, r, Paint()..color = glass);
-  canvas.drawCircle(center, r, _inkStroke(ink, math.max(1.5, sw * 0.72)));
+  canvas.save();
+  canvas.translate(x, y);
+  canvas.rotate(tilt);
+  final drop = Path()
+    ..moveTo(0, -1.35 * r)
+    ..cubicTo(0.55 * r, -0.6 * r, r, -0.1 * r, r, 0.25 * r)
+    ..arcTo(
+      Rect.fromCircle(center: Offset(0, 0.25 * r), radius: r),
+      0,
+      math.pi,
+      false,
+    )
+    ..cubicTo(-r, -0.1 * r, -0.55 * r, -0.6 * r, 0, -1.35 * r)
+    ..close();
+  canvas.drawPath(drop, Paint()..color = fill);
+  canvas.drawPath(drop, _inkStroke(ink, sw * 0.8));
+  canvas.save();
+  canvas.translate(-0.35 * r, 0.05 * r);
+  canvas.rotate(-0.4);
   canvas.drawOval(
-    Rect.fromCenter(
-      center: center + Offset(-r * 0.28, -r * 0.22),
-      width: r * 0.42,
-      height: r * 0.26,
-    ),
-    Paint()..color = Color(low ? 0x66FFFFFF : 0xAAFFFFFF),
+    Rect.fromCenter(center: Offset.zero, width: 0.44 * r, height: 0.64 * r),
+    Paint()..color = const Color(0xB3FFFFFF),
   );
-  final neck = RRect.fromRectAndRadius(
-    Rect.fromCenter(
-      center: center + Offset(0, r * 0.92),
-      width: r * 0.52,
-      height: r * 0.22,
-    ),
-    Radius.circular(r * 0.06),
-  );
-  final base = RRect.fromRectAndRadius(
-    Rect.fromCenter(
-      center: center + Offset(0, r * 1.18),
-      width: r * 0.78,
-      height: r * 0.38,
-    ),
-    Radius.circular(r * 0.10),
-  );
-  canvas.drawRRect(neck, Paint()..color = const Color(0xFFB8B0A4));
-  canvas.drawRRect(neck, _inkStroke(ink, math.max(1.1, sw * 0.5)));
-  canvas.drawRRect(base, Paint()..color = const Color(0xFF9E968A));
-  canvas.drawRRect(base, _inkStroke(ink, math.max(1.2, sw * 0.55)));
+  canvas.restore();
+  canvas.restore();
 }
 
 void _sparkle4(Canvas canvas, Offset c, double r) {
