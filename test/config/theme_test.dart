@@ -7,7 +7,11 @@ import 'package:hue_match/theme/mascot.dart';
 void main() {
   test('paint studio tokens', () {
     expect(AppFonts.body, 'Baloo2');
-    expect(AppFonts.display, 'Chewy');
+    expect(AppFonts.display, 'Nunito');
+    expect(
+      AppFonts.fallback,
+      containsAll(['Baloo2', 'NotoSansJP', 'NotoSansKR', 'NotoSansSC']),
+    );
     expect(AppColors.accent, const Color(0xFF2B6CFF));
     expect(AppRadii.button, 999);
     expect(AppRadii.card, 28);

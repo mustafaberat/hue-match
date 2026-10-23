@@ -8,6 +8,7 @@
 library;
 
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -54,6 +55,7 @@ void main() {
   testWidgets('design shots', (tester) async {
     await tester.runAsync(_loadFonts);
     _setView(tester);
+    addTearDown(tester.view.reset);
 
     final targets = MatchEngine.dailyTargets(_today);
 
@@ -186,6 +188,49 @@ void main() {
     }
 
     await shoot('10-settings', SettingsScreen(versionOverride: '0.1.0 (1)'));
+
+    await shoot(
+      'extra/game-end',
+      GameFrame(
+        child: GameEndView(
+          total: endTotal,
+          maxTotal: GameRules.maxGameScore,
+          best: endTotal,
+          isNewBest: true,
+          entries: stripEntries(endResults),
+          onHome: () {},
+          onPlayAgain: () {},
+        ),
+      ),
+    );
+
+    await _shootSliderCloseUp(
+      tester,
+      name: 'extra/result-high-sliders',
+      child: _Game(
+        round: 4,
+        score: 251 + high.score,
+        child: RoundResultView(result: high, isLastRound: false, onNext: () {}),
+      ),
+    );
+    await _shootSliderCloseUp(
+      tester,
+      name: 'extra/result-low-sliders',
+      child: _Game(
+        round: 1,
+        score: low.score,
+        child: RoundResultView(result: low, isLastRound: false, onNext: () {}),
+      ),
+    );
+
+    _setView(tester, logical: const Size(320, 568), dpr: 2);
+    await shoot('extra/home-320x568', home);
+    _setView(tester, logical: const Size(820, 1180), dpr: 2);
+    await shoot('extra/home-tablet', home);
+    _setView(tester);
+
+    await _shootFontSamples(tester);
+    await _shootMascotSheet(tester);
   });
 }
 
@@ -272,18 +317,18 @@ Future<AppServices> _services(WidgetTester tester) async {
   return services;
 }
 
-void _setView(WidgetTester tester) {
-  tester.view.physicalSize = _physical;
-  tester.view.devicePixelRatio = _dpr;
-  tester.view.padding = const FakeViewPadding(
-    top: _topInsetDp * _dpr,
-    bottom: _bottomInsetDp * _dpr,
+void _setView(WidgetTester tester, {Size? logical, double dpr = _dpr}) {
+  final size = logical ?? Size(_physical.width / _dpr, _physical.height / _dpr);
+  tester.view.physicalSize = Size(size.width * dpr, size.height * dpr);
+  tester.view.devicePixelRatio = dpr;
+  tester.view.padding = FakeViewPadding(
+    top: _topInsetDp * dpr,
+    bottom: _bottomInsetDp * dpr,
   );
-  tester.view.viewPadding = const FakeViewPadding(
-    top: _topInsetDp * _dpr,
-    bottom: _bottomInsetDp * _dpr,
+  tester.view.viewPadding = FakeViewPadding(
+    top: _topInsetDp * dpr,
+    bottom: _bottomInsetDp * dpr,
   );
-  addTearDown(tester.view.reset);
 }
 
 Future<void> _loadFonts() async {
@@ -308,8 +353,17 @@ Future<void> _loadFonts() async {
   await baloo.load();
 
   await (FontLoader(
-    'Chewy',
-  )..addFont(bytes('assets/fonts/Chewy-Regular.ttf'))).load();
+    'Nunito',
+  )..addFont(bytes('assets/fonts/Nunito-ExtraBold.ttf'))).load();
+  await (FontLoader(
+    'NotoSansJP',
+  )..addFont(bytes('assets/fonts/NotoSansJP-Regular.ttf'))).load();
+  await (FontLoader(
+    'NotoSansKR',
+  )..addFont(bytes('assets/fonts/NotoSansKR-Regular.ttf'))).load();
+  await (FontLoader(
+    'NotoSansSC',
+  )..addFont(bytes('assets/fonts/NotoSansSC-Regular.ttf'))).load();
 
   final roboto = FontLoader('Roboto')
     ..addFont(bytes('assets/fonts/Baloo2-Medium.ttf'));
@@ -320,11 +374,206 @@ Future<void> _writePng(WidgetTester tester, GlobalKey key, String path) async {
   final bytes = await tester.runAsync(() async {
     final boundary =
         key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
-    final image = await boundary.toImage(pixelRatio: _dpr);
+    final image = await boundary.toImage(
+      pixelRatio: tester.view.devicePixelRatio,
+    );
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
     image.dispose();
     return data!.buffer.asUint8List();
   });
   final file = File(path)..parent.createSync(recursive: true);
   file.writeAsBytesSync(bytes!);
+}
+
+Future<void> _shootSliderCloseUp(
+  WidgetTester tester, {
+  required String name,
+  required Widget child,
+}) async {
+  final services = await _services(tester);
+  final key = GlobalKey();
+  await tester.pumpWidget(
+    RepaintBoundary(
+      key: key,
+      child: HueMatchApp(services: services, home: child),
+    ),
+  );
+  for (var i = 0; i < 30; i++) {
+    await tester.pump(const Duration(milliseconds: 50));
+  }
+  final track = find.byKey(const ValueKey('compareTracks'));
+  expect(track, findsOneWidget);
+  final rect = tester.getRect(track).inflate(20);
+  await _writePngCrop(tester, key, '$_outRoot/$name.png', rect);
+  await tester.pumpWidget(const SizedBox.shrink());
+}
+
+Future<void> _writePngCrop(
+  WidgetTester tester,
+  GlobalKey key,
+  String path,
+  Rect cropDp,
+) async {
+  final bytes = await tester.runAsync(() async {
+    final dpr = tester.view.devicePixelRatio;
+    final boundary =
+        key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+    final image = await boundary.toImage(pixelRatio: dpr);
+    final src = Rect.fromLTWH(
+      (cropDp.left * dpr).clamp(0, image.width.toDouble()),
+      (cropDp.top * dpr).clamp(0, image.height.toDouble()),
+      math.max(1, cropDp.width * dpr),
+      math.max(1, cropDp.height * dpr),
+    );
+    final w = src.width.round().clamp(1, image.width);
+    final h = src.height.round().clamp(1, image.height);
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    canvas.drawImageRect(
+      image,
+      src,
+      Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble()),
+      Paint(),
+    );
+    final picture = recorder.endRecording();
+    final cropped = await picture.toImage(w, h);
+    picture.dispose();
+    final data = await cropped.toByteData(format: ui.ImageByteFormat.png);
+    image.dispose();
+    cropped.dispose();
+    return data!.buffer.asUint8List();
+  });
+  File(path)
+    ..parent.createSync(recursive: true)
+    ..writeAsBytesSync(bytes!);
+}
+
+Future<void> _shootFontSamples(WidgetTester tester) async {
+  _setView(tester);
+  final services = await _services(tester);
+  final key = GlobalKey();
+  await tester.pumpWidget(
+    RepaintBoundary(
+      key: key,
+      child: HueMatchApp(services: services, home: const _FontSampleSheet()),
+    ),
+  );
+  await tester.pump();
+  await _writePng(tester, key, '$_outRoot/extra/font-samples.png');
+  await tester.pumpWidget(const SizedBox.shrink());
+}
+
+Future<void> _shootMascotSheet(WidgetTester tester) async {
+  _setView(tester);
+  final services = await _services(tester);
+  final key = GlobalKey();
+  await tester.pumpWidget(
+    RepaintBoundary(
+      key: key,
+      child: HueMatchApp(services: services, home: const _MascotSheet()),
+    ),
+  );
+  await tester.pump();
+  await _writePng(tester, key, '$_outRoot/extra/mascot-sheet.png');
+  await tester.pumpWidget(const SizedBox.shrink());
+}
+
+class _MascotSheet extends StatelessWidget {
+  const _MascotSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    return ThemedScaffold(
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Wrap(
+              spacing: 28,
+              runSpacing: 28,
+              alignment: WrapAlignment.center,
+              children: const [
+                ThemeMascot(
+                  mood: MascotMood.happy,
+                  size: 144,
+                  bodyColor: Color(0xFF3EC6E8),
+                ),
+                ThemeMascot(
+                  mood: MascotMood.ok,
+                  size: 116,
+                  bodyColor: Color(0xFF2B6CFF),
+                ),
+                ThemeMascot(
+                  mood: MascotMood.encouraging,
+                  size: 104,
+                  bodyColor: Color(0xFF12A676),
+                ),
+                ThemeMascot(
+                  mood: MascotMood.happy,
+                  size: 152,
+                  bodyColor: Color(0xFF2D1B4E),
+                ),
+                ThemeMascot(
+                  mood: MascotMood.happy,
+                  size: 88,
+                  bodyColor: Color(0xFFE89648),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FontSampleSheet extends StatelessWidget {
+  const _FontSampleSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    return ThemedScaffold(
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          children: [
+            for (final code in AppLanguages.codes)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                child: Localizations.override(
+                  context: context,
+                  locale: Locale(code),
+                  child: Builder(
+                    builder: (context) {
+                      final l10n = AppLocalizations.of(context);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '$code · ${AppLanguages.nativeNames[code]}',
+                            style: AppText.onSky(AppText.caption),
+                          ),
+                          Text(
+                            l10n.howToStep1Title,
+                            style: AppText.onSky(AppText.heading),
+                          ),
+                          Text(
+                            l10n.homeTagline,
+                            style: AppText.onSky(AppText.body),
+                          ),
+                          Text(
+                            '${l10n.play} · ${l10n.bestScore} · ${l10n.target}',
+                            style: AppText.onSky(AppText.bodyStrong),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -59,7 +59,7 @@ class PlayfulTitle extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: AppFonts.display,
-          fontFamilyFallback: const ['Baloo2'],
+          fontFamilyFallback: AppFonts.fallback,
           fontSize: 34,
           fontWeight: FontWeight.w700,
           height: 1.1,

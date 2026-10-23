@@ -85,6 +85,7 @@ class _RoundScore extends StatelessWidget {
 
   static TextStyle get _aside => TextStyle(
     fontFamily: AppFonts.display,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 22,
     fontWeight: FontWeight.w700,
     height: 1,
@@ -117,7 +118,12 @@ class _RoundScore extends StatelessWidget {
               ),
             ),
           ),
-          _CountingScore(score: score, reduce: reduce),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: _CountingScore(score: score, reduce: reduce),
+            ),
+          ),
           const Expanded(child: SizedBox.shrink()),
         ],
       ),
@@ -193,7 +199,7 @@ class _StruckPercent extends StatelessWidget {
   }
 }
 
-/// Dört kanal. Hedef çubuğun üstünde kısa çentik, sen çubuğu kesen çizgi.
+/// Dört kanal. Hedef: içi boş çentik; Sen: aynı biçimde dolu siyah.
 class _CompareTracks extends StatelessWidget {
   const _CompareTracks({required this.target, required this.player});
 
@@ -204,37 +210,23 @@ class _CompareTracks extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Column(
+      key: const ValueKey('compareTracks'),
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _LegendMark(height: _tickHeight, label: l10n.target),
+            const _CompareNotch(filled: false),
+            const SizedBox(width: AppSpacing.sm),
+            Text(l10n.target, style: AppText.onSky(AppText.small)),
             const SizedBox(width: AppSpacing.xl),
-            _LegendMark(height: _tickHeight * 2, label: l10n.you),
+            const _CompareNotch(filled: true),
+            const SizedBox(width: AppSpacing.sm),
+            Text(l10n.you, style: AppText.onSky(AppText.small)),
           ],
         ),
         const SizedBox(height: AppSpacing.md),
         for (final channel in MixChannel.values)
           _CompareTrack(channel: channel, target: target, player: player),
-      ],
-    );
-  }
-}
-
-class _LegendMark extends StatelessWidget {
-  const _LegendMark({required this.height, required this.label});
-
-  final double height;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _GuideLine(height: height),
-        const SizedBox(width: AppSpacing.sm),
-        Text(label, style: AppText.onSky(AppText.small)),
       ],
     );
   }
@@ -273,16 +265,24 @@ class _CompareTrack extends StatelessWidget {
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final usable = constraints.maxWidth - _lineWidth;
+                  const youW = AppSizes.compareNotchWidth;
+                  const youH = AppSizes.compareNotchHeight;
+                  const tgtW = AppSizes.compareTargetNotchWidth;
+                  const tgtH = AppSizes.compareTargetNotchHeight;
+                  final usable = constraints.maxWidth - tgtW;
                   double at(int value) =>
-                      _lineWidth / 2 + usable * (value / channel.max);
+                      tgtW / 2 + usable * (value / channel.max);
+                  final youX = at(channel.valueOf(player));
+                  final targetX = at(channel.valueOf(target));
+                  final trackTop =
+                      (_compareRowHeight - AppSizes.sliderTrackHeight) / 2;
                   return Stack(
                     clipBehavior: Clip.none,
                     children: [
                       Positioned(
                         left: 0,
                         right: 0,
-                        top: _tickHeight,
+                        top: trackTop,
                         height: AppSizes.sliderTrackHeight,
                         child: DecoratedBox(
                           decoration: BoxDecoration(
@@ -293,14 +293,14 @@ class _CompareTrack extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        left: at(channel.valueOf(player)) - _lineWidth / 2,
-                        top: _tickHeight - _needleOverhang,
-                        child: const _GuideLine(height: _needleHeight),
+                        left: youX - youW / 2,
+                        top: (_compareRowHeight - youH) / 2,
+                        child: const _CompareNotch(filled: true),
                       ),
                       Positioned(
-                        left: at(channel.valueOf(target)) - _lineWidth / 2,
-                        top: 0,
-                        child: const _GuideLine(height: _tickHeight),
+                        left: targetX - tgtW / 2,
+                        top: (_compareRowHeight - tgtH) / 2,
+                        child: const _CompareNotch(filled: false),
                       ),
                     ],
                   );
@@ -326,29 +326,69 @@ class _CompareTrack extends StatelessWidget {
   }
 }
 
-const double _lineWidth = 2;
-const double _tickHeight = 8;
-const double _needleOverhang = 6;
-const double _needleHeight = AppSizes.sliderTrackHeight + _needleOverhang * 2;
 const double _compareRowHeight =
-    _tickHeight + AppSizes.sliderTrackHeight + _needleOverhang;
+    AppSizes.compareTargetNotchHeight + AppSpacing.sm;
 
-class _GuideLine extends StatelessWidget {
-  const _GuideLine({required this.height});
+class _CompareNotch extends StatelessWidget {
+  const _CompareNotch({required this.filled});
 
-  final double height;
+  final bool filled;
+
+  Size get _size => filled
+      ? const Size(AppSizes.compareNotchWidth, AppSizes.compareNotchHeight)
+      : const Size(
+          AppSizes.compareTargetNotchWidth,
+          AppSizes.compareTargetNotchHeight,
+        );
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: _lineWidth,
-      height: height,
-      decoration: BoxDecoration(
-        color: AppColors.sliderThumb,
-        boxShadow: const [
-          BoxShadow(color: Color(0xFF000000), blurRadius: 0, spreadRadius: 1),
-        ],
-      ),
+    return CustomPaint(
+      size: _size,
+      painter: _NotchPainter(filled: filled),
     );
   }
+}
+
+/// Sen = dolu siyah; Hedef = biraz büyük, içi gerçekten boş. Hale dışarıda.
+class _NotchPainter extends CustomPainter {
+  _NotchPainter({required this.filled});
+
+  final bool filled;
+
+  static const Color _ink = Color(0xFF1A1A1A);
+  static const Color _halo = Color(0xF2FFF8E8);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const strokeW = AppSizes.compareNotchStroke;
+    const haloW = AppSizes.compareNotchHalo;
+    final pad = haloW + strokeW / 2;
+    final rrect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(pad, pad, size.width - pad * 2, size.height - pad * 2),
+      const Radius.circular(AppSizes.compareNotchRadius),
+    );
+    canvas.drawRRect(
+      rrect.inflate(strokeW / 2 + haloW / 2),
+      Paint()
+        ..color = _halo
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = haloW
+        ..strokeJoin = StrokeJoin.round,
+    );
+    if (filled) {
+      canvas.drawRRect(rrect, Paint()..color = _ink);
+    }
+    canvas.drawRRect(
+      rrect,
+      Paint()
+        ..color = _ink
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeW
+        ..strokeJoin = StrokeJoin.round,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_NotchPainter old) => old.filled != filled;
 }

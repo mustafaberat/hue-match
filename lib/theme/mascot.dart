@@ -1,6 +1,8 @@
 /// Boya kalemi maskot — CustomPainter, ifade skora göre değişir.
 ///
 /// Düşük skor yüzü asla kızgın değil: kalkık kaş, minik üzgün-gülümseme, ter.
+/// Silüet: konik uç (menteşeli kapak), dalgalı kâğıt sargı, uzun gövde.
+/// Uç biraz kalkık; kıvrımlı pembe beyin aralıktan bakar.
 library;
 
 import 'dart:math' as math;
@@ -43,10 +45,7 @@ class ThemeMascot extends StatelessWidget {
   final Color? bodyColor;
 
   /// Silüete göre tuval — home yerleşimi taşmadan bunu kullanır.
-  static Size canvasSize(double size) => Size(size * 0.78, size);
-
-  /// Tuvalin solundaki boşluk — home overlap bunu ekler ki gövde çerçeveye değsin.
-  static double homeLeftInset(double size) => canvasSize(size).width * 0.12;
+  static Size canvasSize(double size) => Size(size * 0.90, size);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +58,7 @@ class ThemeMascot extends StatelessWidget {
   }
 }
 
-/// Boya kalemi: sivri renkli uç, kâğıt sargı, dalgalı etiket, minik kollar.
+/// Boya kalemi: konik uç, menteşeli kapak, beyin, kâğıt sargı, dalgalı etiket.
 class CrayonBuddyPainter extends CustomPainter {
   CrayonBuddyPainter({required this.mood, this.tint});
 
@@ -80,13 +79,22 @@ class CrayonBuddyPainter extends CustomPainter {
     const paperEdge = Color(0xFFE8D7B8);
     final armFill = Paint()..color = paper;
     final waxFill = Paint()..color = wax;
+    final cx = w * 0.50;
+    final bodyW = w * 0.42;
+    final left = cx - bodyW / 2;
+    final right = cx + bodyW / 2;
 
     _crayonArm(
       canvas,
       Path()
-        ..moveTo(w * 0.18, h * 0.60)
-        ..quadraticBezierTo(w * 0.11, h * 0.64, w * 0.10, h * 0.71),
-      Offset(w * 0.10, h * 0.72),
+        ..moveTo(left + w * 0.03, h * 0.58)
+        ..quadraticBezierTo(
+          left - w * 0.08,
+          h * 0.62,
+          left - w * 0.11,
+          h * 0.72,
+        ),
+      Offset(left - w * 0.11, h * 0.73),
       w,
       sw,
       ink,
@@ -97,9 +105,14 @@ class CrayonBuddyPainter extends CustomPainter {
       _crayonArm(
         canvas,
         Path()
-          ..moveTo(w * 0.58, h * 0.60)
-          ..quadraticBezierTo(w * 0.72, h * 0.64, w * 0.76, h * 0.74),
-        Offset(w * 0.76, h * 0.75),
+          ..moveTo(right - w * 0.03, h * 0.58)
+          ..quadraticBezierTo(
+            right + w * 0.10,
+            h * 0.62,
+            right + w * 0.13,
+            h * 0.73,
+          ),
+        Offset(right + w * 0.13, h * 0.74),
         w,
         sw,
         ink,
@@ -108,93 +121,259 @@ class CrayonBuddyPainter extends CustomPainter {
       );
     }
 
-    final paperBody = RRect.fromRectAndRadius(
-      Rect.fromLTWH(w * 0.14, h * 0.32, w * 0.48, h * 0.62),
-      Radius.circular(w * 0.12),
+    final paperTop = h * 0.22;
+    final paperBot = h * 0.975;
+    final paperBody = RRect.fromRectAndCorners(
+      Rect.fromLTRB(left, paperTop, right, paperBot),
+      topLeft: Radius.circular(w * 0.055),
+      topRight: Radius.circular(w * 0.055),
+      bottomLeft: Radius.circular(w * 0.09),
+      bottomRight: Radius.circular(w * 0.09),
     );
     canvas.drawRRect(paperBody, Paint()..color = paper);
     canvas.drawRRect(paperBody, stroke);
 
-    final neck = RRect.fromRectAndRadius(
-      Rect.fromLTWH(w * 0.16, h * 0.20, w * 0.44, h * 0.14),
-      const Radius.circular(2),
-    );
-    canvas.drawRRect(neck, waxFill);
-    canvas.drawRRect(neck, stroke);
-    if (darkWax) _lightRimRRect(canvas, neck, sw);
-
     canvas.save();
     canvas.clipRRect(paperBody);
+    canvas.drawRect(Rect.fromLTWH(left, paperTop, bodyW, h * 0.045), waxFill);
     canvas.drawRect(
-      Rect.fromLTWH(w * 0.14, h * 0.32, w * 0.48, h * 0.06),
-      waxFill,
-    );
-    canvas.drawRect(
-      Rect.fromLTWH(w * 0.14, h * 0.82, w * 0.48, h * 0.12),
+      Rect.fromLTWH(left, h * 0.90, bodyW, paperBot - h * 0.90),
       Paint()..color = paperEdge,
     );
-    _wavyStripe(canvas, w, h, y: h * 0.42, color: _tint(wax, 1.06));
-    _wavyStripe(canvas, w, h, y: h * 0.76, color: _tint(wax, 0.90));
+    _wavyStripe(canvas, left, bodyW, h, y: h * 0.66, color: _tint(wax, 1.06));
+    _wavyStripe(canvas, left, bodyW, h, y: h * 0.86, color: _tint(wax, 0.90));
     canvas.restore();
     canvas.drawRRect(paperBody, stroke);
     canvas.drawLine(
-      Offset(w * 0.14, h * 0.38),
-      Offset(w * 0.62, h * 0.38),
+      Offset(left, paperTop + h * 0.045),
+      Offset(right, paperTop + h * 0.045),
       stroke,
     );
 
-    final tip = Path()
-      ..moveTo(w * 0.18, h * 0.22)
-      ..quadraticBezierTo(w * 0.24, h * 0.06, w * 0.38, h * 0.01)
-      ..quadraticBezierTo(w * 0.52, h * 0.06, w * 0.58, h * 0.22)
-      ..close();
-    canvas.drawPath(tip, Paint()..color = _tint(wax, 1.12));
-    canvas.drawPath(tip, stroke);
-    if (darkWax) _lightRimPath(canvas, tip, sw);
-    final point = Path()
-      ..moveTo(w * 0.32, h * 0.09)
-      ..lineTo(w * 0.38, h * 0.01)
-      ..lineTo(w * 0.44, h * 0.09)
-      ..close();
-    canvas.drawPath(point, waxFill);
-    canvas.drawPath(point, stroke);
-    if (darkWax) _lightRimPath(canvas, point, sw);
+    _paintOpeningBrainAndTip(
+      canvas,
+      cx: cx,
+      h: h,
+      bodyW: bodyW,
+      paperTop: paperTop,
+      wax: wax,
+      darkWax: darkWax,
+      sw: sw,
+      stroke: stroke,
+    );
 
     canvas.drawOval(
       Rect.fromCenter(
-        center: Offset(w * 0.28, h * 0.48),
-        width: w * 0.12,
-        height: h * 0.08,
+        center: Offset(cx - bodyW * 0.20, h * 0.415),
+        width: w * 0.11,
+        height: h * 0.055,
       ),
       Paint()..color = const Color(0x66FFFFFF),
     );
-    if (darkWax) {
-      canvas.drawOval(
-        Rect.fromCenter(
-          center: Offset(w * 0.30, h * 0.12),
-          width: w * 0.10,
-          height: h * 0.055,
-        ),
-        Paint()..color = const Color(0x99FFFFFF),
-      );
-    }
 
     _paintPairFace(
       canvas: canvas,
-      left: Offset(w * 0.28, h * 0.54),
-      right: Offset(w * 0.48, h * 0.54),
-      eyeR: w * 0.09,
-      mouth: Offset(w * 0.38, h * 0.66),
-      mouthW: w * 0.20,
-      mouthH: h * 0.09,
+      left: Offset(cx - bodyW * 0.20, h * 0.435),
+      right: Offset(cx + bodyW * 0.20, h * 0.435),
+      eyeR: w * 0.078,
+      mouth: Offset(cx, h * 0.525),
+      mouthW: w * 0.18,
+      mouthH: h * 0.07,
       mood: mood,
       ink: ink,
       stroke: stroke,
       blush: const Color(0x55E07A3A),
       tongue: const Color(0xFFE07A3A),
-      sweatAt: Offset(w * 0.10, h * 0.28),
-      sparkleAt: Offset(w * 0.70, h * 0.12),
-      handAt: mood == MascotMood.ok ? null : Offset(w * 0.78, h * 0.58),
+      sweatAt: Offset(left - w * 0.04, h * 0.30),
+      sparkleAt: Offset(right + w * 0.05, h * 0.04),
+      handAt: mood == MascotMood.ok ? null : Offset(right + w * 0.15, h * 0.62),
+    );
+  }
+
+  void _paintOpeningBrainAndTip(
+    Canvas canvas, {
+    required double cx,
+    required double h,
+    required double bodyW,
+    required double paperTop,
+    required Color wax,
+    required bool darkWax,
+    required double sw,
+    required Paint stroke,
+  }) {
+    final opening = Path()
+      ..addOval(
+        Rect.fromCenter(
+          center: Offset(cx, paperTop + h * 0.006),
+          width: bodyW * 0.90,
+          height: h * 0.05,
+        ),
+      );
+    canvas.drawPath(opening, Paint()..color = _tint(wax, 1.12));
+    canvas.drawPath(opening, stroke);
+    if (darkWax) _lightRimPath(canvas, opening, sw);
+
+    final hinge = Offset(cx + bodyW / 2, paperTop + h * 0.002);
+    final coneH = paperTop - h * 0.008;
+    canvas.save();
+    canvas.translate(hinge.dx, hinge.dy);
+    canvas.rotate(-0.16);
+    final cone = Path()
+      ..moveTo(0, 0)
+      ..lineTo(-bodyW, 0)
+      ..lineTo(-bodyW / 2, -coneH)
+      ..close();
+    canvas.drawPath(cone, Paint()..color = wax);
+    canvas.drawPath(
+      Path()
+        ..moveTo(-bodyW / 2, -coneH)
+        ..lineTo(0, 0)
+        ..lineTo(-bodyW * 0.38, 0)
+        ..close(),
+      Paint()..color = _tint(wax, 0.80),
+    );
+    canvas.drawPath(
+      Path()
+        ..moveTo(-bodyW * 0.72, -coneH * 0.10)
+        ..lineTo(-bodyW * 0.54, -coneH * 0.68)
+        ..lineTo(-bodyW * 0.44, -coneH * 0.10),
+      Paint()..color = const Color(0x66FFFFFF),
+    );
+    canvas.drawPath(cone, stroke);
+    if (darkWax) _lightRimPath(canvas, cone, sw);
+    canvas.restore();
+    canvas.drawCircle(
+      hinge,
+      math.max(1.8, bodyW * 0.055),
+      Paint()..color = wax,
+    );
+    canvas.drawCircle(hinge, math.max(1.8, bodyW * 0.055), stroke);
+
+    _paintBrain(
+      canvas,
+      center: Offset(cx, paperTop + h * 0.062),
+      rw: bodyW * 0.40,
+      rh: h * 0.095,
+      sw: sw,
+    );
+  }
+
+  void _paintBrain(
+    Canvas canvas, {
+    required Offset center,
+    required double rw,
+    required double rh,
+    required double sw,
+  }) {
+    const brain = Color(0xFFFF7FB2);
+    const brainShade = Color(0xFFD44E8C);
+    const brainLit = Color(0xFFFFD0E6);
+    const brainLine = Color(0xFFB03A72);
+    final fill = Paint()..color = brain;
+    final outline = _inkStroke(brainLine, math.max(1.6, sw * 0.75));
+
+    final leftC = center + Offset(-rw * 0.30, rh * 0.04);
+    final rightC = center + Offset(rw * 0.30, rh * 0.04);
+    final lobe = Size(rw * 1.20, rh * 1.95);
+    canvas.drawOval(
+      Rect.fromCenter(center: leftC, width: lobe.width, height: lobe.height),
+      fill,
+    );
+    canvas.drawOval(
+      Rect.fromCenter(center: rightC, width: lobe.width, height: lobe.height),
+      fill,
+    );
+
+    final bumpR = math.max(2.2, rw * 0.28);
+    for (final lobeC in [leftC, rightC]) {
+      canvas.drawCircle(lobeC + Offset(-rw * 0.18, -rh * 0.72), bumpR, fill);
+      canvas.drawCircle(
+        lobeC + Offset(rw * 0.20, -rh * 0.78),
+        bumpR * 0.9,
+        fill,
+      );
+      canvas.drawCircle(lobeC + Offset(0, rh * 0.78), bumpR * 0.85, fill);
+    }
+
+    canvas.drawPath(_brainOutline(center, rw, rh), outline);
+
+    final fold = Paint()
+      ..color = brainLine
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = math.max(1.5, sw * 0.70)
+      ..strokeCap = StrokeCap.round;
+    final gyri = Paint()
+      ..color = brainShade
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = math.max(1.3, sw * 0.55)
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawPath(
+      Path()
+        ..moveTo(center.dx, center.dy - rh * 0.85)
+        ..cubicTo(
+          center.dx - rw * 0.10,
+          center.dy - rh * 0.10,
+          center.dx + rw * 0.08,
+          center.dy + rh * 0.25,
+          center.dx,
+          center.dy + rh * 0.82,
+        ),
+      fold,
+    );
+    canvas.drawPath(
+      Path()
+        ..moveTo(leftC.dx - rw * 0.15, leftC.dy - rh * 0.35)
+        ..cubicTo(
+          leftC.dx + rw * 0.05,
+          leftC.dy - rh * 0.70,
+          leftC.dx + rw * 0.28,
+          leftC.dy - rh * 0.05,
+          leftC.dx + rw * 0.18,
+          leftC.dy + rh * 0.35,
+        ),
+      gyri,
+    );
+    canvas.drawPath(
+      Path()
+        ..moveTo(leftC.dx - rw * 0.08, leftC.dy + rh * 0.10)
+        ..quadraticBezierTo(
+          leftC.dx + rw * 0.18,
+          leftC.dy + rh * 0.55,
+          leftC.dx + rw * 0.32,
+          leftC.dy + rh * 0.15,
+        ),
+      gyri,
+    );
+    canvas.drawPath(
+      Path()
+        ..moveTo(rightC.dx - rw * 0.18, rightC.dy - rh * 0.30)
+        ..cubicTo(
+          rightC.dx + rw * 0.08,
+          rightC.dy - rh * 0.72,
+          rightC.dx + rw * 0.32,
+          rightC.dy - rh * 0.02,
+          rightC.dx + rw * 0.10,
+          rightC.dy + rh * 0.38,
+        ),
+      gyri,
+    );
+
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: leftC + Offset(-rw * 0.12, -rh * 0.35),
+        width: rw * 0.42,
+        height: rh * 0.32,
+      ),
+      Paint()..color = brainLit,
+    );
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: rightC + Offset(-rw * 0.06, -rh * 0.40),
+        width: rw * 0.28,
+        height: rh * 0.20,
+      ),
+      Paint()..color = const Color(0x66FFFFFF),
     );
   }
 
@@ -230,21 +409,22 @@ class CrayonBuddyPainter extends CustomPainter {
 
   void _wavyStripe(
     Canvas canvas,
-    double w,
+    double left,
+    double bodyW,
     double h, {
     required double y,
     required Color color,
   }) {
-    final path = Path()..moveTo(w * 0.12, y);
+    final path = Path()..moveTo(left - 2, y);
     const steps = 10;
     for (var i = 0; i <= steps; i++) {
       final t = i / steps;
-      final x = w * 0.12 + w * 0.52 * t;
+      final x = left - 2 + (bodyW + 4) * t;
       path.lineTo(x, y + math.sin(t * math.pi * 3) * h * 0.016);
     }
     for (var i = steps; i >= 0; i--) {
       final t = i / steps;
-      final x = w * 0.12 + w * 0.52 * t;
+      final x = left - 2 + (bodyW + 4) * t;
       path.lineTo(
         x,
         y + h * 0.05 + math.sin(t * math.pi * 3 + 0.4) * h * 0.016,
@@ -281,8 +461,48 @@ void _lightRimPath(Canvas canvas, Path path, double sw) {
   canvas.drawPath(path, _lightRimPaint(sw));
 }
 
-void _lightRimRRect(Canvas canvas, RRect rect, double sw) {
-  canvas.drawRRect(rect, _lightRimPaint(sw));
+Path _brainOutline(Offset c, double rw, double rh) {
+  return Path()
+    ..moveTo(c.dx, c.dy - rh * 0.08)
+    ..cubicTo(
+      c.dx - rw * 0.22,
+      c.dy - rh * 1.05,
+      c.dx - rw * 0.95,
+      c.dy - rh * 0.85,
+      c.dx - rw,
+      c.dy - rh * 0.10,
+    )
+    ..cubicTo(
+      c.dx - rw * 1.05,
+      c.dy + rh * 0.55,
+      c.dx - rw * 0.55,
+      c.dy + rh * 1.02,
+      c.dx - rw * 0.16,
+      c.dy + rh * 0.72,
+    )
+    ..quadraticBezierTo(
+      c.dx,
+      c.dy + rh * 0.38,
+      c.dx + rw * 0.16,
+      c.dy + rh * 0.72,
+    )
+    ..cubicTo(
+      c.dx + rw * 0.55,
+      c.dy + rh * 1.02,
+      c.dx + rw * 1.05,
+      c.dy + rh * 0.55,
+      c.dx + rw,
+      c.dy - rh * 0.10,
+    )
+    ..cubicTo(
+      c.dx + rw * 0.95,
+      c.dy - rh * 0.85,
+      c.dx + rw * 0.22,
+      c.dy - rh * 1.05,
+      c.dx,
+      c.dy - rh * 0.08,
+    )
+    ..close();
 }
 
 /// Ortak yüz. Encouraging = kalkık kaş + minik gülücük + ter — asla çatık/kızgın.

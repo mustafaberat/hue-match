@@ -391,7 +391,10 @@ Future<void> _loadFonts() async {
 
   await (FontLoader(
     AppFonts.display,
-  )..addFont(fileBytes('assets/fonts/Chewy-Regular.ttf'))).load();
+  )..addFont(fileBytes('assets/fonts/Nunito-ExtraBold.ttf'))).load();
+  await load('NotoSansJP', 'assets/fonts/NotoSansJP-Regular.ttf');
+  await load('NotoSansKR', 'assets/fonts/NotoSansKR-Regular.ttf');
+  await load('NotoSansSC', 'assets/fonts/NotoSansSC-Regular.ttf');
 
   // Widget test sistem fontunu kullanmaz; CJK ve emoji aksi halde □.
   await load(

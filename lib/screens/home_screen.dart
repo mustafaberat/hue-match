@@ -119,9 +119,7 @@ class _HomeScreenState extends State<HomeScreen>
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               _HueSquare(color: swatch),
-                              const SizedBox(
-                                height: AppSpacing.xxxl + AppSpacing.sm,
-                              ),
+                              const SizedBox(height: AppSpacing.lg),
                               PlayfulTitle(l10n.appTitle),
                               const SizedBox(height: AppSpacing.sm),
                               Text(
@@ -129,64 +127,63 @@ class _HomeScreenState extends State<HomeScreen>
                                 textAlign: TextAlign.center,
                                 style: AppText.onSky(AppText.body),
                               ),
-                              const SizedBox(height: AppSpacing.lg),
-                              Visibility(
-                                visible: best > 0,
-                                maintainSize: true,
-                                maintainAnimation: true,
-                                maintainState: true,
-                                child: Column(
-                                  children: [
-                                    SkyCaption(l10n.bestScore),
-                                    const SizedBox(height: AppSpacing.xs),
-                                    Text(
-                                      '$best ${l10n.outOf(GameRules.maxGameScore)}',
-                                      textAlign: TextAlign.center,
-                                      style: AppText.onSky(AppText.number),
-                                    ),
-                                  ],
+                              if (best > 0) ...[
+                                const SizedBox(height: AppSpacing.md),
+                                SkyCaption(l10n.bestScore),
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(
+                                  '$best ${l10n.outOf(GameRules.maxGameScore)}',
+                                  textAlign: TextAlign.center,
+                                  style: AppText.onSky(AppText.number),
                                 ),
+                              ],
+                              const SizedBox(height: AppSpacing.xl),
+                              Segmented<GameMode>(
+                                options: {
+                                  GameMode.memory: l10n.modeMemory,
+                                  GameMode.practice: l10n.modePractice,
+                                },
+                                selected: settings.mode,
+                                onChanged: settings.setMode,
+                                selectedColor: swatch,
+                              ),
+                              const SizedBox(height: AppSpacing.sm),
+                              SkyCaption(
+                                settings.mode == GameMode.memory
+                                    ? l10n.modeMemoryHint(
+                                        settings.revealSeconds,
+                                      )
+                                    : l10n.modePracticeHint,
+                                style: AppText.small,
+                              ),
+                              const SizedBox(height: AppSpacing.lg),
+                              PrimaryButton(
+                                label: l10n.play,
+                                icon: Icons.play_arrow_rounded,
+                                color: swatch,
+                                onPressed: _play,
+                              ),
+                              const SizedBox(height: AppSpacing.md),
+                              SecondaryButton(
+                                label: l10n.settings,
+                                icon: Icons.tune_rounded,
+                                onPressed: _openSettings,
+                              ),
+                              const SizedBox(height: AppSpacing.md),
+                              SecondaryButton(
+                                label: l10n.howToPlay,
+                                icon: Icons.question_mark_rounded,
+                                onPressed: _openHowTo,
                               ),
                             ],
                           ),
                         ),
                       ),
-                      Segmented<GameMode>(
-                        options: {
-                          GameMode.memory: l10n.modeMemory,
-                          GameMode.practice: l10n.modePractice,
-                        },
-                        selected: settings.mode,
-                        onChanged: settings.setMode,
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      SkyCaption(
-                        settings.mode == GameMode.memory
-                            ? l10n.modeMemoryHint(settings.revealSeconds)
-                            : l10n.modePracticeHint,
-                        style: AppText.small,
-                      ),
-                      const SizedBox(height: AppSpacing.xl),
-                      PrimaryButton(
-                        label: l10n.play,
-                        icon: Icons.play_arrow_rounded,
-                        color: swatch,
-                        onPressed: _play,
-                      ),
                       const SizedBox(height: AppSpacing.md),
-                      SecondaryButton(
-                        label: l10n.settings,
-                        icon: Icons.tune_rounded,
-                        onPressed: _openSettings,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: widget.bannerOverride ?? const _HomeBanner(),
                       ),
-                      const SizedBox(height: AppSpacing.md),
-                      SecondaryButton(
-                        label: l10n.howToPlay,
-                        icon: Icons.question_mark_rounded,
-                        onPressed: _openHowTo,
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      widget.bannerOverride ?? const _HomeBanner(),
                     ],
                   );
                 },
@@ -217,31 +214,28 @@ class _HueSquare extends StatelessWidget {
           constraints.maxWidth * AppSizes.homeSwatchMaxFraction,
         ].reduce((a, b) => a < b ? a : b);
         final mascotSize = AppSizes.mascotHome;
-        final mascotCanvas = ThemeMascot.canvasSize(mascotSize);
-        final overlap =
-            AppSizes.homeMascotOverlap + ThemeMascot.homeLeftInset(mascotSize);
-        final sitBelow = AppSizes.homeMascotSitBelow;
+        final peek = mascotSize * AppSizes.homeMascotPeekFraction;
         return SizedBox(
-          height: side + sitBelow,
-          width: side + mascotCanvas.width - overlap,
+          height: side + peek,
+          width: side,
           child: Stack(
             clipBehavior: Clip.none,
+            alignment: Alignment.topCenter,
             children: [
               Positioned(
-                left: 0,
                 top: 0,
-                child: SizedBox.square(
-                  dimension: side,
-                  child: ColorSwatchBox(color: color),
-                ),
-              ),
-              Positioned(
-                right: 0,
-                bottom: 0,
                 child: ThemeMascot(
                   mood: MascotMood.happy,
                   size: mascotSize,
                   bodyColor: color,
+                ),
+              ),
+              Positioned(
+                left: 0,
+                top: peek,
+                child: SizedBox.square(
+                  dimension: side,
+                  child: ColorSwatchBox(color: color),
                 ),
               ),
             ],

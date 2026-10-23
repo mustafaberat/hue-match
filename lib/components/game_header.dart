@@ -69,25 +69,29 @@ class RoundProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        for (var i = 1; i <= total; i++) ...[
-          AnimatedContainer(
-            duration: AppDurations.medium,
-            width: AppSizes.roundSegmentWidth,
-            height: AppSizes.roundSegmentHeight,
-            decoration: BoxDecoration(
-              color: i < current
-                  ? AppColors.textSecondary
-                  : i == current
-                  ? AppColors.accent
-                  : AppColors.outlineStrong,
-              borderRadius: BorderRadius.circular(AppRadii.track),
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          for (var i = 1; i <= total; i++) ...[
+            AnimatedContainer(
+              duration: AppDurations.medium,
+              width: AppSizes.roundSegmentWidth,
+              height: AppSizes.roundSegmentHeight,
+              decoration: BoxDecoration(
+                color: i < current
+                    ? AppColors.textSecondary
+                    : i == current
+                    ? AppColors.accent
+                    : AppColors.outlineStrong,
+                borderRadius: BorderRadius.circular(AppRadii.track),
+              ),
             ),
-          ),
-          if (i < total) const SizedBox(width: AppSpacing.xs),
+            if (i < total) const SizedBox(width: AppSpacing.xs),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

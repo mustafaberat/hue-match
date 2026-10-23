@@ -321,8 +321,17 @@ Future<void> _loadFonts() async {
   await baloo.load();
 
   await (FontLoader(
-    'Chewy',
-  )..addFont(bytes('assets/fonts/Chewy-Regular.ttf'))).load();
+    'Nunito',
+  )..addFont(bytes('assets/fonts/Nunito-ExtraBold.ttf'))).load();
+  await (FontLoader(
+    'NotoSansJP',
+  )..addFont(bytes('assets/fonts/NotoSansJP-Regular.ttf'))).load();
+  await (FontLoader(
+    'NotoSansKR',
+  )..addFont(bytes('assets/fonts/NotoSansKR-Regular.ttf'))).load();
+  await (FontLoader(
+    'NotoSansSC',
+  )..addFont(bytes('assets/fonts/NotoSansSC-Regular.ttf'))).load();
 
   final roboto = FontLoader('Roboto')
     ..addFont(bytes('assets/fonts/Baloo2-Medium.ttf'));

@@ -57,7 +57,13 @@ abstract final class AppColors {
 
 abstract final class AppFonts {
   static const String body = 'Baloo2';
-  static const String display = 'Chewy';
+  static const String display = 'Nunito';
+  static const String notoJp = 'NotoSansJP';
+  static const String notoKr = 'NotoSansKR';
+  static const String notoSc = 'NotoSansSC';
+
+  /// Body first (Turkish / Latin), then CJK. No Arabic locale.
+  static const List<String> fallback = [body, notoJp, notoKr, notoSc];
 }
 
 abstract final class AppSpacing {
@@ -101,19 +107,24 @@ abstract final class AppSizes {
   static const double shadowBlur = 18;
   static const double shadowY = 8;
 
-  static const double homeSwatch = 200;
-  static const double homeSwatchMaxFraction = 0.50;
+  static const double homeSwatch = 196;
+  static const double homeSwatchMaxFraction = 0.56;
   static const double mascot = 88;
-  static const double mascotHome = 148;
+  static const double mascotHome = 144;
   static const double mascotResult = 116;
   static const double mascotEnd = 152;
   static const double mascotHowTo = 104;
 
-  /// Home'da maskot çerçeveye bu kadar girer (paspartu, renk dolgusuna değil).
-  static const double homeMascotOverlap = swatchFrameWidth + swatchMat;
+  /// Home'da kare arkasına duran kalemin üstü (uç + beyin + göz) bu kadar taşar.
+  static const double homeMascotPeekFraction = 0.50;
 
-  /// Maskot swatch köşesinin biraz altında oturur (ayak / sepet görünür).
-  static const double homeMascotSitBelow = 12;
+  static const double compareNotchWidth = 10;
+  static const double compareNotchHeight = 22;
+  static const double compareTargetNotchWidth = 14;
+  static const double compareTargetNotchHeight = 26;
+  static const double compareNotchStroke = 2.2;
+  static const double compareNotchHalo = 1.3;
+  static const double compareNotchRadius = 2.0;
 
   static const double revealBarHeight = 6;
   static const double revealBarWidthFraction = 0.6;

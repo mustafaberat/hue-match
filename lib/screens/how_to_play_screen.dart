@@ -287,7 +287,11 @@ class _Step extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  Text(title, style: AppText.onSky(AppText.title)),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(title, style: AppText.onSky(AppText.title)),
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   Text(body, style: AppText.onSky(AppText.body)),
                 ],

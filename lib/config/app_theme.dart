@@ -12,7 +12,7 @@ export '../theme/mascot.dart';
 export '../theme/playful_title.dart';
 
 abstract final class AppText {
-  static const List<String> _fallback = ['Baloo2'];
+  static const List<String> _fallback = AppFonts.fallback;
 
   static TextStyle get displayHuge => TextStyle(
     fontFamily: AppFonts.display,
@@ -170,6 +170,7 @@ ThemeData buildAppTheme() {
     brightness: Brightness.light,
     colorScheme: scheme,
     fontFamily: AppFonts.body,
+    fontFamilyFallback: AppFonts.fallback,
     scaffoldBackgroundColor: AppColors.background,
     splashFactory: InkSparkle.splashFactory,
     dividerColor: AppColors.outline,
