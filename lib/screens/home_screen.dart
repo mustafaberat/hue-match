@@ -216,9 +216,10 @@ class _HueSquare extends StatelessWidget {
         final mascotSize = AppSizes.mascotHome;
         final peek = mascotSize * AppSizes.homeMascotPeekFraction;
         final mascotCanvas = ThemeMascot.canvasSize(mascotSize);
+        final boxW = side > mascotCanvas.width ? side : mascotCanvas.width;
         return SizedBox(
           height: side + peek,
-          width: side,
+          width: boxW,
           child: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.topCenter,
@@ -234,7 +235,7 @@ class _HueSquare extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 0,
+                left: (boxW - side) / 2,
                 top: peek,
                 child: SizedBox.square(
                   dimension: side,
