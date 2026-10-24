@@ -1,0 +1,6 @@
+<tr-TR>
+Yeni uygulama ikonu ve iyileştirmeler
+</tr-TR>
+<en-US>
+New app icon and improvements
+</en-US>

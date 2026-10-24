@@ -1,18 +1,6 @@
 <tr-TR>
-İlk sürüm.
+Yeni uygulama ikonu ve iyileştirmeler
 </tr-TR>
 <en-US>
-First release.
+New app icon and improvements
 </en-US>
-<es-419>
-Primera versión.
-</es-419>
-<pt-BR>
-Primeira versão.
-</pt-BR>
-<id>
-Rilis pertama.
-</id>
-<hi-IN>
-पहला संस्करण।
-</hi-IN>

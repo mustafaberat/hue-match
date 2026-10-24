@@ -1,7 +1,7 @@
 name: hue_match
 description: "HueMind — see a color, mix it from memory with RGB and brightness."
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.1.0+2
 
 environment:
   sdk: ^3.13.2
