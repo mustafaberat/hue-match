@@ -205,6 +205,9 @@ abstract final class AppBorders {
 
 abstract final class AppDurations {
   static const Duration homeHueCycle = Duration(seconds: 8);
+
+  /// main() içindeki her başlangıç adımı en fazla bu kadar bekletir.
+  static const Duration startupStepTimeout = Duration(seconds: 5);
   static const Duration revealFade = Duration(milliseconds: 200);
   static const Duration fast = Duration(milliseconds: 150);
   static const Duration medium = Duration(milliseconds: 280);
