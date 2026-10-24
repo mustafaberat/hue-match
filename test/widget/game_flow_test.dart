@@ -1,10 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hue_match/app.dart';
 import 'package:hue_match/app_scope.dart';
+import 'package:hue_match/components/buttons.dart';
 import 'package:hue_match/config/app_config.dart';
+import 'package:hue_match/engine/match_engine.dart';
+import 'package:hue_match/game/game_screen.dart';
 import 'package:hue_match/game/mixer_view.dart';
 import 'package:hue_match/game/reveal_view.dart';
 import 'package:hue_match/game/round_result_view.dart';
+import 'package:hue_match/screens/home_screen.dart';
+import 'package:hue_match/screens/how_to_play_screen.dart';
 import 'package:hue_match/services/ad_service.dart';
 import 'package:hue_match/services/settings_service.dart';
 import 'package:hue_match/services/stats_service.dart';
@@ -20,7 +25,6 @@ void _reduceMotion(WidgetTester tester) {
 Future<AppServices> _services(Map<String, Object> prefs) async {
   SharedPreferences.setMockInitialValues({
     AppPrefsKeys.language: 'en',
-    AppPrefsKeys.howToSeen: true,
     ...prefs,
   });
   final services = AppServices(
@@ -33,6 +37,16 @@ Future<AppServices> _services(Map<String, Object> prefs) async {
 }
 
 void main() {
+  testWidgets('cold start opens home, not how to play', (tester) async {
+    _reduceMotion(tester);
+    final services = await _services({});
+    await tester.pumpWidget(HueMatchApp(services: services));
+    await tester.pumpAndSettle();
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(HowToPlayScreen), findsNothing);
+    expect(find.text('Play'), findsOneWidget);
+  });
+
   testWidgets('memory round: reveal → mixer → result', (tester) async {
     _reduceMotion(tester);
     final services = await _services({});
@@ -44,17 +58,47 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.byType(RevealView), findsOneWidget);
     expect(find.text('Remember this color'), findsOneWidget);
+    expect(find.text('Skip'), findsOneWidget);
 
     await tester.pump(const Duration(seconds: GameRules.defaultRevealSeconds));
     await tester.pumpAndSettle();
     expect(find.byType(MixerView), findsOneWidget);
-    expect(find.text('Got it'), findsOneWidget);
+    expect(find.text('Got it'), findsNothing);
 
     await tester.tap(find.text('Confirm'));
     await tester.pumpAndSettle();
     expect(find.byType(RoundResultView), findsOneWidget);
     expect(find.text('Next round'), findsOneWidget);
     expect(services.settings.onboardingDone, isTrue);
+  });
+
+  testWidgets('memory round: Skip ends reveal without waiting', (tester) async {
+    _reduceMotion(tester);
+    final services = await _services({});
+    await tester.pumpWidget(
+      HueMatchApp(
+        services: services,
+        home: GameScreen(engine: MatchEngine.random()),
+      ),
+    );
+    await tester.pump();
+    expect(find.byType(RevealView), findsOneWidget);
+    expect(find.byType(MixerView), findsNothing);
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(RevealView),
+        matching: find.byType(SecondaryButton),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(MixerView), findsOneWidget);
+    expect(find.byType(RevealView), findsNothing);
+
+    await tester.pump(const Duration(seconds: GameRules.defaultRevealSeconds));
+    await tester.pumpAndSettle();
+    expect(find.byType(MixerView), findsOneWidget);
+    expect(find.byType(RoundResultView), findsNothing);
   });
 
   testWidgets('practice: target visible, 5 rounds to game end', (tester) async {
@@ -90,7 +134,7 @@ void main() {
     await services.settings.setLanguage('tr');
     await tester.pumpAndSettle();
     expect(find.text('Oyna'), findsOneWidget);
-    expect(find.text('Renk Eşle'), findsOneWidget);
+    expect(find.text('HueMind'), findsOneWidget);
   });
 
   group('interstitial policy', () {

@@ -45,10 +45,9 @@ class GameEndView extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                SkyCaption(
                   (isDaily ? l10n.dailyResultTitle : l10n.gameOverTitle)
                       .upperFor(context),
-                  style: AppText.caption,
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 TweenAnimationBuilder<double>(
@@ -62,26 +61,35 @@ class GameEndView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Text('${value.round()}', style: AppText.displayHuge),
+                        Text(
+                          '${value.round()}',
+                          style: AppText.onSky(AppText.displayHuge),
+                        ),
                         const SizedBox(width: AppSpacing.sm),
                         Text(
                           l10n.outOf(maxTotal),
-                          style: AppText.heading.copyWith(
-                            color: AppColors.textMuted,
-                          ),
+                          style: AppText.onSky(AppText.heading, muted: true),
                         ),
                       ],
                     ),
                   ),
                 ),
+                const SizedBox(height: AppSpacing.md),
+                ThemeMascot(
+                  mood: mascotMoodForScore(total, max: maxTotal),
+                  size: AppSizes.mascotEnd,
+                ),
                 const SizedBox(height: AppSpacing.lg),
                 isNewBest
                     ? const _NewBestChip()
-                    : Text(l10n.bestScoreValue(best), style: AppText.body),
+                    : Text(
+                        l10n.bestScoreValue(best),
+                        style: AppText.onSky(AppText.body),
+                      ),
                 const SizedBox(height: AppSpacing.huge),
-                Text(l10n.rounds.upperFor(context), style: AppText.caption),
+                SkyCaption(l10n.rounds.upperFor(context)),
                 const SizedBox(height: AppSpacing.lg),
-                RoundStrip(entries: entries),
+                RoundStrip(entries: entries, onBackdrop: true),
               ],
             ),
           ),
@@ -129,7 +137,7 @@ class _NewBestChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.emoji_events_outlined,
               size: AppSizes.iconSmall,
               color: AppColors.accent,

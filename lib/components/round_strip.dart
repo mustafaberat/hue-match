@@ -24,11 +24,13 @@ class RoundStrip extends StatelessWidget {
   const RoundStrip({
     required this.entries,
     this.dotSize = AppSizes.stripDot,
+    this.onBackdrop = false,
     super.key,
   });
 
   final List<StripEntry> entries;
   final double dotSize;
+  final bool onBackdrop;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,12 @@ class RoundStrip extends StatelessWidget {
                 size: dotSize,
               ),
               const SizedBox(height: AppSpacing.sm),
-              Text('${entry.score}', style: AppText.number),
+              Text(
+                '${entry.score}',
+                style: onBackdrop
+                    ? AppText.onSky(AppText.number)
+                    : AppText.number,
+              ),
             ],
           ),
       ],

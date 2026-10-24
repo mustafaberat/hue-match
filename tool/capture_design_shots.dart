@@ -93,7 +93,7 @@ void main() {
       _Game(
         round: 2,
         score: 87,
-        child: RevealView(target: revealTarget, remaining: 0.58),
+        child: RevealView(target: revealTarget, remaining: 0.58, onSkip: () {}),
       ),
     );
 
@@ -137,24 +137,6 @@ void main() {
           showValues: true,
           onMixChanged: (_) {},
           onConfirm: () {},
-        ),
-      ),
-    );
-
-    await shoot(
-      '05-mixer-first-run-hint',
-      _Game(
-        round: 1,
-        score: 0,
-        child: MixerView(
-          mode: GameMode.memory,
-          target: targets[0],
-          mix: MixColor.initial,
-          canReplay: true,
-          showHint: true,
-          onMixChanged: (_) {},
-          onConfirm: () {},
-          onReplay: () {},
         ),
       ),
     );
@@ -214,11 +196,7 @@ void main() {
 
 /// Oyun ekranı iskeleti; başlık gerçek [GameHeader].
 class _Game extends StatelessWidget {
-  const _Game({
-    required this.round,
-    required this.score,
-    required this.child,
-  });
+  const _Game({required this.round, required this.score, required this.child});
 
   final int round;
   final int score;
@@ -293,7 +271,6 @@ Future<AppServices> _services(
   // ignore: invalid_use_of_visible_for_testing_member
   SharedPreferences.setMockInitialValues({
     AppPrefsKeys.language: lang,
-    AppPrefsKeys.howToSeen: true,
     AppPrefsKeys.onboardingDone: true,
     AppPrefsKeys.bestMemory: _bestScore,
     ...extra,
@@ -337,21 +314,27 @@ Future<void> _loadFonts() async {
     );
   await icons.load();
 
-  final manrope = FontLoader(AppFonts.body);
+  final baloo = FontLoader('Baloo2');
   for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
-    manrope.addFont(bytes('assets/fonts/Manrope-$w.ttf'));
+    baloo.addFont(bytes('assets/fonts/Baloo2-$w.ttf'));
   }
-  await manrope.load();
+  await baloo.load();
 
-  final display = FontLoader(AppFonts.display);
-  for (final w in ['Medium', 'SemiBold', 'Bold']) {
-    display.addFont(bytes('assets/fonts/SpaceGrotesk-$w.ttf'));
-  }
-  await display.load();
+  await (FontLoader(
+    'Nunito',
+  )..addFont(bytes('assets/fonts/Nunito-ExtraBold.ttf'))).load();
+  await (FontLoader(
+    'NotoSansJP',
+  )..addFont(bytes('assets/fonts/NotoSansJP-Regular.ttf'))).load();
+  await (FontLoader(
+    'NotoSansKR',
+  )..addFont(bytes('assets/fonts/NotoSansKR-Regular.ttf'))).load();
+  await (FontLoader(
+    'NotoSansSC',
+  )..addFont(bytes('assets/fonts/NotoSansSC-Regular.ttf'))).load();
 
-  // Roboto yedeği (dialog vb.) yine Manrope'a düşsün.
   final roboto = FontLoader('Roboto')
-    ..addFont(bytes('assets/fonts/Manrope-Medium.ttf'));
+    ..addFont(bytes('assets/fonts/Baloo2-Medium.ttf'));
   await roboto.load();
 }
 

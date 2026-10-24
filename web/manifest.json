@@ -1,9 +1,9 @@
 {
-    "name": "Hue Match",
-    "short_name": "Hue Match",
+    "name": "HueMind",
+    "short_name": "HueMind",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0B0B0D",
+    "background_color": "#1D1D1D",
     "theme_color": "#0B0B0D",
     "description": "See a color, mix it from memory with RGB and brightness. How close can you get?",
     "orientation": "portrait-primary",

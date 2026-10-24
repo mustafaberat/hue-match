@@ -1,4 +1,4 @@
-/// Hue Match — oyun kuralları, puan eğrisi, üretim aralıkları ve kimlik.
+/// HueMind — oyun kuralları, puan eğrisi, üretim aralıkları ve kimlik.
 ///
 /// Görsel token'lar (renk, boşluk, süre) `tokens.dart` içindedir.
 library;
@@ -10,10 +10,11 @@ import '../color/oklab.dart';
 // ---------------------------------------------------------------------------
 
 abstract final class AppIdentity {
-  static const String appName = 'Hue Match';
+  static const String appName = 'HueMind';
   static const String developer = 'ARU SOFT';
   static const String packageId = 'com.arusoft.huematch';
-  static const String privacyPolicyUrl = 'https://arusoft.vercel.app/privacy';
+  static const String privacyPolicyUrl =
+      'https://arusoft.vercel.app/privacy/hue-match';
 }
 
 // ---------------------------------------------------------------------------
@@ -52,7 +53,6 @@ abstract final class AppPrefsKeys {
   static const String randomStart = 'random_start';
   static const String gameMode = 'game_mode';
   static const String onboardingDone = 'onboarding_done';
-  static const String howToSeen = 'how_to_seen';
   static const String bestMemory = 'best_memory';
   static const String bestPractice = 'best_practice';
   static const String dailyScorePrefix = 'daily_';
@@ -102,8 +102,8 @@ abstract final class MixerRules {
 // ---------------------------------------------------------------------------
 
 abstract final class ScoringConfig {
-  static const double deltaEMax = 0.30;
-  static const double gamma = 1.5;
+  static const double deltaEMax = 0.36;
+  static const double gamma = 1.2;
 
   /// Etiket alt sınırları (§4.3).
   static const int perfectMin = 98;

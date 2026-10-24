@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ListTile(
                 title: Text(entry.value, style: AppText.bodyStrong),
                 trailing: entry.key == settings.languageCode
-                    ? const Icon(Icons.check_rounded, color: AppColors.accent)
+                    ? Icon(Icons.check_rounded, color: AppColors.accent)
                     : null,
                 onTap: () => Navigator.of(context).pop(entry.key),
               ),
@@ -85,7 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l10n = AppLocalizations.of(context);
     final settings = AppScope.of(context).settings;
 
-    return Scaffold(
+    return ThemedScaffold(
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -110,7 +110,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         onPressed: () => Navigator.of(context).maybePop(),
                       ),
                       const SizedBox(width: AppSpacing.lg),
-                      Text(l10n.settings, style: AppText.heading),
+                      Text(
+                        l10n.settings,
+                        style: AppText.onSky(AppText.heading),
+                      ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.xxl),
@@ -186,7 +189,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _Row(
                         icon: Icons.shield_outlined,
                         title: l10n.settingsPrivacy,
-                        trailing: const Icon(
+                        trailing: Icon(
                           Icons.open_in_new_rounded,
                           size: AppSizes.iconSmall,
                           color: AppColors.textMuted,
@@ -204,7 +207,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Text(
                     '${AppIdentity.appName} · ${AppIdentity.developer}',
                     textAlign: TextAlign.center,
-                    style: AppText.caption,
+                    style: AppText.onSky(AppText.caption, muted: true),
                   ),
                 ],
               ),
@@ -234,19 +237,18 @@ class _Section extends StatelessWidget {
               left: AppSpacing.xs,
               bottom: AppSpacing.sm,
             ),
-            child: Text(title.upperFor(context), style: AppText.caption),
+            child: SkyCaption(
+              title.upperFor(context),
+              textAlign: TextAlign.start,
+            ),
           ),
           DecoratedBox(
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadii.card),
-              border: Border.all(color: AppColors.outline),
-            ),
+            decoration: appCardDecoration(),
             child: Column(
               children: [
                 for (var i = 0; i < children.length; i++) ...[
                   if (i > 0)
-                    const Divider(
+                    Divider(
                       height: 1,
                       thickness: 1,
                       indent: AppSizes.settingsDividerIndent,
@@ -385,5 +387,5 @@ class _Chevron extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted);
+      Icon(Icons.chevron_right_rounded, color: AppColors.textMuted);
 }

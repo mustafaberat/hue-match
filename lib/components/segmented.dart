@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../config/app_theme.dart';
 import '../config/tokens.dart';
+import 'buttons.dart';
 
 /// Minimal iki/üç seçenekli toggle (mod seçimi, hafıza süresi).
 class Segmented<T> extends StatelessWidget {
@@ -10,6 +11,7 @@ class Segmented<T> extends StatelessWidget {
     required this.selected,
     required this.onChanged,
     this.height = AppSizes.segmentHeight,
+    this.selectedColor,
     super.key,
   });
 
@@ -18,8 +20,15 @@ class Segmented<T> extends StatelessWidget {
   final ValueChanged<T> onChanged;
   final double height;
 
+  /// Verilirse seçili dilim bu renk (home'da Oyna ile aynı).
+  final Color? selectedColor;
+
   @override
   Widget build(BuildContext context) {
+    final active = selectedColor ?? AppColors.accent;
+    final onActive = selectedColor == null
+        ? AppColors.onAccent
+        : foregroundOn(active);
     return Container(
       height: height,
       padding: const EdgeInsets.all(AppSpacing.xs),
@@ -27,6 +36,7 @@ class Segmented<T> extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.chip),
         border: Border.all(color: AppColors.outline),
+        boxShadow: AppShadows.card,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -47,7 +57,7 @@ class Segmented<T> extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: entry.key == selected
-                          ? AppColors.textPrimary
+                          ? active
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(AppRadii.chip),
                     ),
@@ -58,7 +68,7 @@ class Segmented<T> extends StatelessWidget {
                       style: AppText.small.copyWith(
                         fontWeight: FontWeight.w800,
                         color: entry.key == selected
-                            ? AppColors.background
+                            ? onActive
                             : AppColors.textSecondary,
                       ),
                     ),

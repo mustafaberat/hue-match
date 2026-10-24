@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "Hue Match",
+  "appTitle": "HueMind",
   "homeTagline": "See it. Remember it. Mix it.",
   "play": "Play",
   "daily": "Daily",
@@ -36,7 +36,7 @@
     }
   },
   "modePracticeHint": "The target stays visible while you mix",
-  "bestScore": "Best",
+  "bestScore": "Best score",
   "bestScoreValue": "Best {score}",
   "@bestScoreValue": {
     "placeholders": {
@@ -76,9 +76,11 @@
     }
   },
   "revealPrompt": "Remember this color",
+  "skip": "Skip",
   "yourColor": "Your color",
   "target": "Target",
   "you": "You",
+  "closeness": "Closeness",
   "confirm": "Confirm",
   "showAgain": "Show again",
   "showAgainCost": "−10%",
@@ -112,7 +114,7 @@
   "sectionAbout": "About",
   "settingsLanguage": "Language",
   "settingsColorBlind": "Color-blind mode",
-  "settingsColorBlindHint": "Targets avoid the red–green axis",
+  "settingsColorBlindHint": "Colors are easier to tell apart",
   "settingsRevealTime": "Memory time",
   "settingsRevealTimeHint": "How long the target is shown",
   "secondsShort": "{seconds} s",

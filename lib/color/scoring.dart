@@ -24,6 +24,10 @@ double rawScore(
   return GameRules.maxRoundScore * math.pow(t, gamma).toDouble();
 }
 
+/// Yuvarlanmış puan, "Tekrar göster" cezası yok.
+int scoreBeforeReplay(double deltaE) =>
+    rawScore(deltaE).round().clamp(0, GameRules.maxRoundScore);
+
 /// Tur puanı. "Tekrar göster" kullanıldıysa ×0.9 sonra yuvarla.
 int roundScore(double deltaE, {bool replayUsed = false}) {
   final raw = rawScore(deltaE);

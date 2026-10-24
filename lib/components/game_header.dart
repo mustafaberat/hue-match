@@ -46,10 +46,7 @@ class GameHeader extends StatelessWidget {
                   [l10n.roundOf(roundNumber, roundCount), ?badge].join('  ·  '),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppText.small.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: AppText.onSky(AppText.small),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 RoundProgress(current: roundNumber, total: roundCount),
@@ -57,7 +54,7 @@ class GameHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.lg),
-          Text(l10n.scoreValue(score), style: AppText.number),
+          Text(l10n.scoreValue(score), style: AppText.onSky(AppText.number)),
         ],
       ),
     );
@@ -72,25 +69,29 @@ class RoundProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        for (var i = 1; i <= total; i++) ...[
-          AnimatedContainer(
-            duration: AppDurations.medium,
-            width: AppSizes.roundSegmentWidth,
-            height: AppSizes.roundSegmentHeight,
-            decoration: BoxDecoration(
-              color: i < current
-                  ? AppColors.textSecondary
-                  : i == current
-                  ? AppColors.accent
-                  : AppColors.outlineStrong,
-              borderRadius: BorderRadius.circular(AppRadii.track),
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          for (var i = 1; i <= total; i++) ...[
+            AnimatedContainer(
+              duration: AppDurations.medium,
+              width: AppSizes.roundSegmentWidth,
+              height: AppSizes.roundSegmentHeight,
+              decoration: BoxDecoration(
+                color: i < current
+                    ? AppColors.textSecondary
+                    : i == current
+                    ? AppColors.accent
+                    : AppColors.outlineStrong,
+                borderRadius: BorderRadius.circular(AppRadii.track),
+              ),
             ),
-          ),
-          if (i < total) const SizedBox(width: AppSpacing.xs),
+            if (i < total) const SizedBox(width: AppSpacing.xs),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

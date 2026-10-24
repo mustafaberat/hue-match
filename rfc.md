@@ -1,8 +1,8 @@
-# RFC V1 — Hue Match
+# RFC V1 — HueMind
 
 Tek kişilik renk eşleme oyunu. Bir renk gösterilir, oyuncu **R / G / B / Alfa** çubuklarıyla aynı rengi yapmaya çalışır, yakınlığa göre puan alır. Backend yok, offline. Flutter, Android / iOS / web.
 
-Kimlik: **Hue Match** (TR: **Renk Eşle**), ARU SOFT, `com.arusoft.huematch`.
+Kimlik: **HueMind**, ARU SOFT, `com.arusoft.huematch`.
 Hue Hunt’ın kardeşi (aynı renk motoru / OKLab yardımcıları paylaşılabilir).
 Ortak kurallar: `lib/MOBILE_APP_RULES.md`.
 

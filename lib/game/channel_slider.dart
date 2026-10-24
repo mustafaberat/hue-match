@@ -78,6 +78,7 @@ class ChannelSlider extends StatefulWidget {
     this.showValue = false,
     this.onFineChanged,
     this.enabled = true,
+    this.onBackdrop = false,
     super.key,
   });
 
@@ -87,6 +88,9 @@ class ChannelSlider extends StatefulWidget {
   final bool showValue;
   final ValueChanged<bool>? onFineChanged;
   final bool enabled;
+
+  /// Mixer / sonuç gökyüzünde; how-to plakasında false.
+  final bool onBackdrop;
 
   @override
   State<ChannelSlider> createState() => _ChannelSliderState();
@@ -125,7 +129,7 @@ class _ChannelSliderState extends State<ChannelSlider> {
     final value = _value;
     final mix = widget.mix;
     final start = _channel == MixChannel.a
-        ? AppColors.stage
+        ? AppColors.mixBackdrop
         : _channel.apply(mix, 0).displayColor;
     final end = _channel.apply(mix, _channel.max).displayColor;
     final fraction = value / _channel.max;
@@ -142,9 +146,12 @@ class _ChannelSliderState extends State<ChannelSlider> {
               width: AppSizes.sliderLabelWidth,
               child: Text(
                 _channel.letter,
-                style: AppText.channelLetter.copyWith(
-                  color: _fine ? AppColors.accent : AppColors.textPrimary,
-                ),
+                style: widget.onBackdrop
+                    ? AppText.onSky(AppText.channelLetter)
+                          .copyWith(color: _fine ? AppColors.accent : null)
+                    : AppText.channelLetter.copyWith(
+                        color: _fine ? AppColors.accent : AppColors.textPrimary,
+                      ),
               ),
             ),
             Expanded(
@@ -203,14 +210,19 @@ class _ChannelSliderState extends State<ChannelSlider> {
                 child: widget.showValue
                     ? Text(
                         _channel.formatValue(l10n, value),
-                        style: AppText.number.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                        style: widget.onBackdrop
+                            ? AppText.onSky(AppText.number)
+                            : AppText.number.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
                       )
                     : Icon(
                         _channel.icon,
                         size: AppSizes.iconSmall,
                         color: _channel.identity,
+                        shadows: widget.onBackdrop
+                            ? AppShadows.onBackdrop
+                            : const [],
                       ),
               ),
             ),
@@ -272,13 +284,7 @@ class _Track extends StatelessWidget {
                       width: AppSizes.sliderThumbBorder,
                     )
                   : null,
-              boxShadow: const [
-                BoxShadow(
-                  color: AppColors.sliderThumbShadow,
-                  blurRadius: AppSpacing.sm,
-                  offset: Offset(0, AppSpacing.xxs),
-                ),
-              ],
+              boxShadow: AppShadows.thumb,
             ),
           ),
         ),
