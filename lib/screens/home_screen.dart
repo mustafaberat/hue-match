@@ -127,16 +127,28 @@ class _HomeScreenState extends State<HomeScreen>
                                 textAlign: TextAlign.center,
                                 style: AppText.onSky(AppText.body),
                               ),
-                              if (best > 0) ...[
-                                const SizedBox(height: AppSpacing.md),
-                                SkyCaption(l10n.bestScore),
-                                const SizedBox(height: AppSpacing.xs),
-                                Text(
-                                  '$best ${l10n.outOf(GameRules.maxGameScore)}',
-                                  textAlign: TextAlign.center,
-                                  style: AppText.onSky(AppText.number),
+                              const SizedBox(height: AppSpacing.md),
+                              // Skor yokken de aynı yeri kaplar (hayalet):
+                              // mod değişince başlık ve butonlar kaymaz.
+                              Visibility(
+                                key: const ValueKey('home-best-score'),
+                                visible: best > 0,
+                                maintainSize: true,
+                                maintainAnimation: true,
+                                maintainState: true,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SkyCaption(l10n.bestScore),
+                                    const SizedBox(height: AppSpacing.xs),
+                                    Text(
+                                      '$best ${l10n.outOf(GameRules.maxGameScore)}',
+                                      textAlign: TextAlign.center,
+                                      style: AppText.onSky(AppText.number),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                               const SizedBox(height: AppSpacing.xl),
                               Segmented<GameMode>(
                                 options: {
@@ -148,13 +160,27 @@ class _HomeScreenState extends State<HomeScreen>
                                 selectedColor: swatch,
                               ),
                               const SizedBox(height: AppSpacing.sm),
-                              SkyCaption(
-                                settings.mode == GameMode.memory
-                                    ? l10n.modeMemoryHint(
-                                        settings.revealSeconds,
-                                      )
-                                    : l10n.modePracticeHint,
-                                style: AppText.small,
+                              // İki ipucu üst üste: yükseklik her zaman
+                              // uzun olanınki, satır sayısı farkı kaydırmaz.
+                              Stack(
+                                alignment: Alignment.topCenter,
+                                children: [
+                                  for (final mode in GameMode.values)
+                                    Visibility(
+                                      visible: settings.mode == mode,
+                                      maintainSize: true,
+                                      maintainAnimation: true,
+                                      maintainState: true,
+                                      child: SkyCaption(
+                                        mode == GameMode.memory
+                                            ? l10n.modeMemoryHint(
+                                                settings.revealSeconds,
+                                              )
+                                            : l10n.modePracticeHint,
+                                        style: AppText.small,
+                                      ),
+                                    ),
+                                ],
                               ),
                               const SizedBox(height: AppSpacing.lg),
                               PrimaryButton(
